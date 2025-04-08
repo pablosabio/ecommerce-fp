@@ -55,7 +55,7 @@ export default function Carousel() {
       next: "slide3",
       title: "Next-Level Gaming Starts Here - Discover PlayStation 5 Today!",
       offerText: "Flash Sale – Only Today!",
-      imageSrc: "/images/header_playstation_image.webp",
+      imageSrc: "/images/dd3l13vfoartrgbvkkh5.webp",
       altText: "PlayStation 5",
     },
     {
