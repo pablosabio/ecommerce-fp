@@ -13,6 +13,9 @@ import Settings from './pages/Settings'
 // import components
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import Carousel from './components/Carousel'
+import Cards from './components/Cards'
+
 
 function App() {
 
@@ -20,6 +23,8 @@ function App() {
     <>
     <Router>
       <Navbar />
+
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
@@ -30,6 +35,8 @@ function App() {
           <Route path='/settings' element={<Settings />} />
         {/* <Route path='/products/:id' element={<Product />} /> to add later for products */}
         </Routes>
+        <Carousel/>
+      <Cards/>
       <Footer />
     </Router>
     </>
