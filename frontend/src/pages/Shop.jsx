@@ -1,4 +1,12 @@
+import Cards from '../components/Cards'
+
 export default function Shop() {
-    return <div className="pt-24 text-center text-3xl">Shop Page</div>;
+    return(
+    <div className="pt-24">
+      <Cards />
+      {/* here another componentes of the home page */}
+    </div>
+    ) ;
+    
   }
   

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "prod1",  
+    "name": "Bose QuietComfort 45",
+    "imageSrc": "./images/m16coelz8ivkk9f0nwrz.webp",
+    "price": 329.99,
+    "rating": 4,
+    "reviewCount": 125,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod2",
+    "name": "ASUS ROG Zephyrus G16",
+    "imageSrc": "/images/wig1urqgnkeyp4t2rtso.webp",
+    "price": 1999.99,
+    "rating": 3,
+    "reviewCount": 88,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod3",
+    "name": "Samsung Galaxy S23",
+    "imageSrc": "/images/xjd4eprpwqs7odbera1w.webp",
+    "price": 799.99,
+    "rating": 5,
+    "reviewCount": 150,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod4",
+    "name": "PlayStation 5",
+    "imageSrc": "/images/dd3l13vfoartrgbvkkh5.webp",
+    "price": 499.99,
+    "rating": 4,
+    "reviewCount": 210,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod5",
+    "name": "MacBook Pro 16",
+    "imageSrc": "/images/header_macbook_image.webp",
+    "price": 2499.99,
+    "rating": 4.6,
+    "reviewCount": 95,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod6",
+    "name": "Garmin Venu 2",
+    "imageSrc": "/images/hdfi4u3fmprazpnrnaga.webp",
+    "price": 349.99,
+    "rating": 4.4,
+    "reviewCount": 112,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod7",
+    "name": "Canon EOS R5",
+    "imageSrc": "/images/r5h370zuujvrw461c6wy.webp",
+    "price": 3899.99,
+    "rating": 4.7,
+    "reviewCount": 78,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod8",
+    "name": "Apple AirPods Pro 2nd gen",
+    "imageSrc": "/images/k4dafzhwhgcn5tnoylrw.webp",
+    "price": 249.99,
+    "rating": 4.9,
+    "reviewCount": 180,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod9",
+    "name": "Sony WF-1000XM5",
+    "imageSrc": "/images/e3zjaupyumdkladmytke.webp",
+    "price": 299.99,
+    "rating": 4.5,
+    "reviewCount": 135,
+    "buyNowLink": "#"
+  },
+  {
+    "id": "prod10",
+    "name": "Samsung Projector 4k",
+    "imageSrc": "/images/qqdcly8a8vkyciy9g0bw.webp",
+    "price": 1499.99,
+    "rating": 4.3,
+    "reviewCount": 62,
+    "buyNowLink": "#"
+  }
+]
