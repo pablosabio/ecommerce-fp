@@ -1,12 +1,13 @@
 [
   {
-    "id": "prod1",  
+    "id": "prod1",
     "name": "Bose QuietComfort 45",
-    "imageSrc": "./images/m16coelz8ivkk9f0nwrz.webp",
+    "imageSrc": "/images/m16coelz8ivkk9f0nwrz.webp",
     "price": 329.99,
     "rating": 4,
     "reviewCount": 125,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Experience world-class noise cancellation that makes quiet sound quieter and music sound better. These lightweight headphones feature plush earcups for all-day comfort and deliver deep, clear audio with volume-optimized Active EQ for balanced performance at any volume."
   },
   {
     "id": "prod2",
@@ -15,7 +16,8 @@
     "price": 1999.99,
     "rating": 3,
     "reviewCount": 88,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Unleash top-tier gaming performance with the sleek and portable ROG Zephyrus G16. It boasts a high-refresh-rate QHD display for fluid visuals, powered by the latest Intel Core processors and NVIDIA GeForce RTX graphics, making it ideal for demanding games and creative workloads on the go."
   },
   {
     "id": "prod3",
@@ -24,7 +26,8 @@
     "price": 799.99,
     "rating": 5,
     "reviewCount": 150,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Capture stunning photos and videos day or night with the pro-grade camera system on the Galaxy S23, featuring enhanced low-light capabilities. Enjoy immersive viewing on its bright Dynamic AMOLED 2X display, and experience seamless performance thanks to the powerful Snapdragon chipset optimized for Galaxy devices."
   },
   {
     "id": "prod4",
@@ -33,7 +36,8 @@
     "price": 499.99,
     "rating": 4,
     "reviewCount": 210,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Immerse yourself in next-generation gaming with the PlayStation 5 console. Experience lightning-fast loading with an ultra-high-speed SSD, deeper immersion with support for haptic feedback via the DualSense controller, adaptive triggers, 3D Audio technology, and stunning 4K visuals at high frame rates."
   },
   {
     "id": "prod5",
@@ -42,7 +46,8 @@
     "price": 2499.99,
     "rating": 4.6,
     "reviewCount": 95,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "The ultimate pro laptop, the MacBook Pro 16 delivers game-changing performance and incredible battery life with Apple's powerful M-series chips. Its stunning Liquid Retina XDR display offers breathtaking dynamic range and contrast, making it perfect for demanding creative professionals and power users."
   },
   {
     "id": "prod6",
@@ -51,7 +56,8 @@
     "price": 349.99,
     "rating": 4.4,
     "reviewCount": 112,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Understand your body better with the Garmin Venu 2 GPS smartwatch, featuring a bright AMOLED display. Track your fitness activities with dozens of built-in sports apps, monitor key health stats like heart rate, sleep score, and SpO2, and enjoy smart notifications and music storage."
   },
   {
     "id": "prod7",
@@ -60,7 +66,8 @@
     "price": 3899.99,
     "rating": 4.7,
     "reviewCount": 78,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Push your creative boundaries with the Canon EOS R5, a revolutionary full-frame mirrorless camera for professionals. Capture incredible detail with its high-resolution 45MP sensor, record stunning 8K RAW video internally, and rely on its advanced Dual Pixel CMOS AF II system for sharp, reliable focus."
   },
   {
     "id": "prod8",
@@ -69,7 +76,8 @@
     "price": 249.99,
     "rating": 4.9,
     "reviewCount": 180,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Re-engineered for richer audio quality, the AirPods Pro (2nd generation) offer up to 2x more Active Noise Cancellation and an adaptive Transparency mode. Enjoy personalized Spatial Audio that tracks your head movements, longer battery life, and precise finding with the updated MagSafe Charging Case."
   },
   {
     "id": "prod9",
@@ -78,7 +86,8 @@
     "price": 299.99,
     "rating": 4.5,
     "reviewCount": 135,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Discover the new standard in truly wireless listening with the Sony WF-1000XM5 earbuds, featuring the best noise cancellation technology. Experience breathtaking high-resolution audio, crystal-clear call quality thanks to AI noise reduction, and a comfortable, lightweight design for all-day wear."
   },
   {
     "id": "prod10",
@@ -87,6 +96,7 @@
     "price": 1499.99,
     "rating": 4.3,
     "reviewCount": 62,
-    "buyNowLink": "#"
+    "buyNowLink": "#",
+    "description": "Transform almost any space into a home theater with this versatile 4K smart projector from Samsung (likely The Premiere or The Freestyle model). Enjoy a sharp, vibrant picture up to 120 inches or more, with easy setup features like auto-focus and keystone correction, plus built-in access to your favorite streaming services."
   }
 ]

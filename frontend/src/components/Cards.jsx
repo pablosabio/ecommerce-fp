@@ -42,11 +42,13 @@ const ProductCard = ({
   return (
     <div className="card w-full bg-base-100 shadow-md">
       <figure className="bg-gray-200 dark:bg-gray-200 h-60 flex items-center justify-center">
+      <a href={`/product/${id}`}> 
         <img 
         src={imageSrc} 
         alt={name} 
         className="max-h-56 max-w-full object-contain" 
         />
+        </a> 
       </figure>
       <div className="card-body p-4"> 
         <h2 className="card-title text-base">{name}</h2> 
