@@ -10,12 +10,11 @@ import Contact from './pages/Contact'
 import Cart from './pages/Cart'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import ProductDetails from './pages/ProductDetails'
 
 // import components
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
-
-
 
 function App() {
 
@@ -32,7 +31,7 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/settings' element={<Settings />} />
-        {/* <Route path='/products/:id' element={<Product />} /> to add later for products */}
+          <Route path="/product/:id" element={<ProductDetails />} />
         </Routes>
       <Footer />
     </Router>
