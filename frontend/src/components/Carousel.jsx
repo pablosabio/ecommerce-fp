@@ -4,17 +4,17 @@ import React from "react";
 const Slide = ({ id, prev, next, title, offerText, imageSrc, altText }) => (
   <div
     id={id}
-    className="carousel-item relative w-full bg-[#E6E9F2] min-h-[300px] py-8 flex justify-center items-center"
+    className="carousel-item relative w-full bg-gray-200 min-h-[300px] py-8 flex justify-center items-center"
   >
     <div className="flex flex-col md:flex-row items-center w-full px-40">
       {/* النص */}
       <div className="text-center md:text-left flex-1 mb-6 md:mb-0">
-        <p className="text-[#FF9800] text-sm mb-2">{offerText}</p>
+        <p className="text-orange-500 text-sm mb-2">{offerText}</p>
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-black leading-snug mb-4">
           {title}
         </h2>
         <div className="flex justify-center md:justify-start gap-4 flex-wrap">
-          <button className="bg-[#FF9800] text-white px-5 py-2 rounded-full">Buy now</button>
+          <button className="bg-orange-500 text-white px-5 py-2 rounded-full">Buy now</button>
           <button className="bg-transparent text-black hover:underline">Find more →</button>
         </div>
       </div>

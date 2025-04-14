@@ -1,11 +1,13 @@
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { CartContext } from '../contexts/CartContext';
 
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const { cartItems, subtotal } = useContext(CartContext); 
   
   // Brand color constant for consistency
   const BRAND_COLOR = "text-orange-500"; // Brand orange color
@@ -241,45 +243,55 @@ export default function Navbar() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0
                   0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span className={`badge badge-sm indicator-item ${BRAND_BG} text-white`}>8</span>
+              <span className={`badge badge-sm indicator-item ${BRAND_BG} text-white`}>
+                
+                {cartItems.reduce((total, item) => total + item.quantity, 0)}
+
+              </span>
             </div>
           </div>
           <div tabIndex={0} className="card dropdown-content z-[1] mt-3 shadow bg-base-100 rounded-box w-72 animate-fadeIn">
             <div className="card-body p-4">
-              <span className="text-lg font-bold">Cart (8 items)</span>
+              <span className="text-lg font-bold">
+                Cart ({cartItems.reduce((total, item) => total + item.quantity, 0)} items)
+                </span>
               
               {/* Mini cart preview */}
               <div className="max-h-64 overflow-auto">
-                <div className="flex items-center gap-2 py-2 border-b">
-                  <div className="w-10 h-10 bg-gray-200 rounded-md flex-shrink-0"></div>
-                  <div className="flex-grow">
-                    <p className="text-sm font-medium">Wireless Headphones</p>
-                    <p className="text-xs text-gray-500">1 × $129.99</p>
-                  </div>
+        {cartItems.length === 0 ? (
+          <div className="text-center py-4 text-gray-500">
+            Your cart is empty
+          </div>
+        ) : (
+          <>
+            {cartItems.slice(0, 3).map(item => (
+              <div key={item.id} className="flex items-center gap-2 py-2 border-b">
+                <div className="w-10 h-10 bg-gray-200 rounded-md flex-shrink-0">
+                  {item.imageSrc && <img src={item.imageSrc} alt={item.name} className="w-full h-full object-cover rounded-md" />}
                 </div>
-                <div className="flex items-center gap-2 py-2 border-b">
-                  <div className="w-10 h-10 bg-gray-200 rounded-md flex-shrink-0"></div>
-                  <div className="flex-grow">
-                    <p className="text-sm font-medium">Bluetooth Speaker</p>
-                    <p className="text-xs text-gray-500">2 × $79.99</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 py-2">
-                  <div className="w-10 h-10 bg-gray-200 rounded-md flex-shrink-0"></div>
-                  <div className="flex-grow">
-                    <p className="text-sm font-medium">Smart Watch</p>
-                    <p className="text-xs text-gray-500">1 × $199.99</p>
-                  </div>
-                </div>
-                <div className="text-xs text-center mt-2 text-gray-500">
-                  + 4 more items
+                <div className="flex-grow">
+                  <p className="text-sm font-medium">{item.name}</p>
+                  <p className="text-xs text-gray-500">{item.quantity} × ${item.price.toFixed(2)}</p>
                 </div>
               </div>
+            ))}
+            
+            {cartItems.length > 3 && (
+              <div className="text-xs text-center mt-2 text-gray-500">
+                + {cartItems.length - 3} more items
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
               
               <div className="mt-3">
                 <div className="flex justify-between mb-2">
                   <span>Subtotal:</span>
-                  <span className={`font-semibold ${BRAND_COLOR}`}>$999.99</span>
+                  <span className={`font-semibold ${BRAND_COLOR}`}>
+                    ${subtotal.toFixed(2)}
+                    </span>
                 </div>
                 <div className="card-actions justify-end">
                   <Link to="/cart" className={`btn ${BRAND_BG} text-white hover:bg-orange-600 btn-block border-none`}>

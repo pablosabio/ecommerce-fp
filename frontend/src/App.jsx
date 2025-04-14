@@ -1,5 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { CartProvider } from './contexts/CartContext'
 
 // import pages
 import Home from './pages/Home'
@@ -20,10 +21,9 @@ function App() {
 
   return (
     <>
+    <CartProvider>
     <Router>
       <Navbar />
-
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
@@ -36,6 +36,7 @@ function App() {
         </Routes>
       <Footer />
     </Router>
+    </CartProvider>
     </>
   )
 }
