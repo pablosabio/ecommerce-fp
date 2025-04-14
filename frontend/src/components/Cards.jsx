@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import productsData from '../data/products.json'; // Import the JSON data directly
+import { CartContext } from "../contexts/CartContext"; // Added this for the Cart - Pablo
 
 // ProductCard component 
 const ProductCard = ({
@@ -9,8 +10,22 @@ const ProductCard = ({
   price,
   rating,
   reviewCount,
-  buyNowLink,
 }) => {
+
+  // Use the CartContext to add items to the cart - Pablo
+  const { addToCart } = useContext(CartContext);
+
+  const handleAddToCart = () => {
+    const product = {
+      id,
+      name,
+      price,
+      imageSrc,
+      // description,
+    };
+
+    addToCart(product, 1);
+  };
 
   // Helper function to determine star state (full, half, empty)
   const getStarState = (index) => {
@@ -25,9 +40,13 @@ const ProductCard = ({
   };
 
   return (
-    <div className="card w-64 bg-base-100 shadow-md">
-      <figure>
-        <img src={imageSrc} alt={name} className="object-cover h-60 w-full" />
+    <div className="card w-full bg-base-100 shadow-md">
+      <figure className="bg-gray-200 dark:bg-gray-200 h-60 flex items-center justify-center">
+        <img 
+        src={imageSrc} 
+        alt={name} 
+        className="max-h-56 max-w-full object-contain" 
+        />
       </figure>
       <div className="card-body p-4"> 
         <h2 className="card-title text-base">{name}</h2> 
@@ -49,14 +68,12 @@ const ProductCard = ({
           <span className="text-xs text-gray-500">({reviewCount} reviews)</span> 
         </div>
         <div className="card-actions justify-end">
-          <a
-            href={buyNowLink}
-            className="btn btn-primary btn-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Buy now
-          </a>
+        {/* Added a button to add the product to the cart - Pablo */}
+        <button
+            onClick={handleAddToCart}
+            className="btn btn-primary btn-sm">
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
@@ -71,7 +88,7 @@ const AllProductsGrid = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
       {/* Map directly over the imported data */}
       {productsData.map((product) => (
         // Use the unique product.id from the JSON file as the key
