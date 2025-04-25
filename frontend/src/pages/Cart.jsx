@@ -1,10 +1,15 @@
 // src/components/Cart.jsx
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, subtotal } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
 
   return (
     <div className="container mx-auto px-4 py-24 max-w-4xl">
@@ -103,7 +108,12 @@ export default function Cart() {
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-primary btn-block">Proceed to Checkout</button>
+                  <button 
+                  className="btn btn-primary btn-block"
+                  onClick={handleCheckout}
+                  >
+                    Proceed to Checkout
+                    </button>
                 </div>
               </div>
             </div>

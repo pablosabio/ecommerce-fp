@@ -11,6 +11,7 @@ import Cart from './pages/Cart'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import ProductDetails from './pages/ProductDetails'
+import Checkout from './pages/Checkout'
 
 // import components
 import Footer from './components/Footer'
@@ -20,8 +21,8 @@ function App() {
 
   return (
     <>
-    <CartProvider>
     <Router>
+    <CartProvider>
       <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -32,10 +33,11 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/settings' element={<Settings />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       <Footer />
-    </Router>
     </CartProvider>
+    </Router>
     </>
   )
 }

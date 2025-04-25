@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const CartContext = createContext();
 
+
 export const CartProvider = ({ children }) => {
     // Initialize cart items from local storage if available
     const [cartItems, setCartItems] = useState(() => {
@@ -49,6 +50,11 @@ export const CartProvider = ({ children }) => {
         );
     };
 
+    // Clear cart
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
     // Calculate total
 
     const subtotal = cartItems.reduce((total, item) => 
@@ -58,10 +64,12 @@ export const CartProvider = ({ children }) => {
     return (
         <CartContext.Provider 
           value={{ 
-            cartItems, 
+            cartItems,
+            setCartItems,
             addToCart, 
             removeFromCart, 
-            updateQuantity, 
+            updateQuantity,
+            clearCart,
             subtotal 
           }}
         >
