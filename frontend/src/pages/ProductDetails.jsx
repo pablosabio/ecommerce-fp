@@ -50,11 +50,11 @@ const ProductDetails = () => {
     <div className="container mx-auto p-4 md:p-8 mt-16 md:mt-20">
       <div className="card lg:card-side bg-base-100 shadow-xl border border-base-200">
         {/* Image section */}
-        <figure className="p-4 lg:p-8 lg:w-2/5 bg-contain bg-center bg-no-repeat flex items-center justify-center">
+        <figure className="p-4 lg:p-8 lg:w-2/5 bg-gray-200 dark:bg-gray-200 bg-contain bg-center bg-no-repeat flex items-center justify-center rounded-lg">
           <img
             src={product.imageSrc} // Use imageSrc from product data
             alt={product.name}
-            className="max-h-[60vh] lg:max-h-[70vh] w-auto h-auto object-contain rounded-lg mix-blend-multiply"
+            className="max-h-[60vh] lg:max-h-[70vh] w-auto h-auto object-contain rounded-lg"
           />
         </figure>
         {/* Product details section */}
