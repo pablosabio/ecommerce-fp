@@ -4,11 +4,15 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import stripeRoutes from './routes/stripe.js';
+import connectDB from './config/db.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// MongoDB connection
+connectDB();
 
 // Middleware
 app.use(cors());
@@ -24,6 +28,10 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/stripe', stripeRoutes);
+// Add other routes when created
+// app.use('/api/users', userRoutes);
+// app.use('/api/products', productRoutes);
+// app.use('/api/orders', orderRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
