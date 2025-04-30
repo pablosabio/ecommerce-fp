@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import stripeRoutes from './routes/stripe.js';
+import orderRoutes from './routes/orderRoutes.js';
 import connectDB from './config/db.js';
 
 dotenv.config();
@@ -19,7 +20,7 @@ app.use(cors());
 
 // Parse JSON bodies for all routes except /stripe/webhook
 app.use((req, res, next) => {
-  if (req.originalUrl === '/stripe/webhook') {
+  if (req.originalUrl === '/api/stripe/webhook') {
     next();
   } else {
     bodyParser.json()(req, res, next);
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/stripe', stripeRoutes);
+app.use('/api/orders', orderRoutes);
 // Add other routes when created
 // app.use('/api/users', userRoutes);
 // app.use('/api/products', productRoutes);

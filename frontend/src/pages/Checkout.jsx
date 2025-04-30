@@ -42,14 +42,14 @@ const CheckoutForm = () => {
       try {
         // Create metadata with order items
         const metadata = {
-          products: JSON.stringify(
-            cartItems.map(item => ({
-              id: item.id,
-              name: item.name,
-              quantity: item.quantity
-            }))
-          )
+          products: cartItems.map(item => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+          }))
         };
+        
         
         const { clientSecret } = await createPaymentIntent(subtotal, metadata);
         setClientSecret(clientSecret);
@@ -113,11 +113,23 @@ const CheckoutForm = () => {
                 city: shippingInfo.city,
                 state: shippingInfo.state,
                 postal_code: shippingInfo.zipCode,
+                country: 'US', // Default to US or make this selectable
               },
+            },
+          },
+          shipping: {
+            name: shippingInfo.name,
+            address: {
+              line1: shippingInfo.address,
+              city: shippingInfo.city,
+              state: shippingInfo.state,
+              postal_code: shippingInfo.zipCode,
+              country: 'US', // Default to US or make this selectable
             },
           },
         }
       );
+  
   
       setIsProcessing(false);
   
