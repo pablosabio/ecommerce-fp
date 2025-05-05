@@ -2,12 +2,15 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+
+// Import Routes
 import stripeRoutes from './routes/stripe.js';
 import orderRoutes from './routes/orderRoutes.js';
+import emailRouter from './routes/emailRoutes.js'; // <--- Import the new email router
 import connectDB from './config/db.js';
 
-dotenv.config();
+dotenv.config(); // Load environment variables first
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,30 +19,31 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors()); // Enable CORS
 
-// Parse JSON bodies for all routes except /stripe/webhook
+// Use express.json for JSON parsing (with exception for Stripe webhook)
 app.use((req, res, next) => {
-  if (req.originalUrl === '/api/stripe/webhook') {
-    next();
+  // Make sure the check matches the start of the path more precisely
+  if (req.originalUrl.startsWith('/api/stripe/webhook')) {
+    next(); // Stripe webhook needs raw body, skip JSON parsing
   } else {
-    bodyParser.json()(req, res, next);
+    express.json()(req, res, next); // Parse JSON for other routes
   }
 });
 
-// Routes
+// --- Routes ---
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/orders', orderRoutes);
-// Add other routes when created
-// app.use('/api/users', userRoutes);
-// app.use('/api/products', productRoutes);
-// app.use('/api/orders', orderRoutes);
+// --- Register Email Route ---
+// Any request starting with /api/email will be routed to emailRouter
+app.use('/api/email', emailRouter); // <--- Use the new email router
 
-// Basic route
+// Base Route
 app.get('/', (req, res) => {
   res.send('E-commerce API is running...');
 });
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
