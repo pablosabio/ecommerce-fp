@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 const orderItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product', // This assumes you have a Product model
-    required: false // Making it false for now since we're storing metadata from Stripe
+    ref: 'Product',
+    required: false
   },
   name: {
     type: String,
@@ -22,7 +22,7 @@ const orderItemSchema = new mongoose.Schema({
     min: 0
   },
   productId: {
-    type: String, // This would be the id from your frontend product data
+    type: String,
     required: true
   }
 });
@@ -30,8 +30,8 @@ const orderItemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // This assumes you have a User model
-    required: false // Making it optional for now for guest checkout
+    ref: 'User',
+    required: false
   },
   orderItems: [orderItemSchema],
   shippingAddress: {
@@ -89,13 +89,22 @@ const orderSchema = new mongoose.Schema({
   deliveredAt: {
     type: Date
   },
-  stripePaymentIntentId: {
+  // Use a different field name to avoid conflicts with existing index
+  stripePaymentId: {
     type: String,
-    unique: true, // This helps prevent duplicate payments
-    sparse: true // This allows null values
+    default: null
   }
 }, {
   timestamps: true
+});
+
+// Use a pre-save hook to ensure we don't save null values for stripePaymentId
+orderSchema.pre('save', function(next) {
+  // If stripePaymentId is null or empty, remove it entirely
+  if (this.stripePaymentId === null || this.stripePaymentId === '') {
+    this.stripePaymentId = undefined;
+  }
+  next();
 });
 
 const Order = mongoose.model('Order', orderSchema);
