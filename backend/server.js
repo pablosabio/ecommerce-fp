@@ -44,7 +44,7 @@ app.use('/api/stripe', stripeRoutes);
 
 //I want to add also this
 //for userRoutes
-app.use('/api/users', userRoutes);
+//app.use('/api/users', userRoutes);
 
 
 import { Schema, model } from "mongoose";
