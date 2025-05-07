@@ -50,7 +50,7 @@ app.use('/api/stripe', stripeRoutes);
 import { Schema, model } from "mongoose";
 import { addressSchema } from "./addressSchema.js";
 
-const userSchema = new Schema(
+/*const userSchema = new Schema(
   {
     first_name: {
       type: String,
@@ -95,14 +95,14 @@ const userSchema = new Schema(
     ],
   },
   { timestamps: true }
-);
+);*/
 
 // Create and export the User model
-const UsersModel = model("User", userSchema);
+/*const UsersModel = model("User", userSchema);
 export default UsersModel;
  app.use('/api/users', userRoutes);
  app.use('/api/products', productRoutes);
- app.use('/api/orders', orderRoutes);
+ app.use('/api/orders', orderRoutes);*/
 
 // Basic route
 app.get('/', (req, res) => {
