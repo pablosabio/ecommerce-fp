@@ -2,13 +2,16 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
-import stripeRoutes from './routes/stripe.js';
-import connectDB from './config/db.js';
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/userRoutes.js";
 
-dotenv.config();
+// Import Routes
+import stripeRoutes from './routes/stripe.js';
+import orderRoutes from './routes/orderRoutes.js';
+import emailRouter from './routes/emailRoutes.js'; // <--- Import the new email router
+import userRoutes from "./routes/userRoutes.js";
+import connectDB from './config/db.js';
+
+dotenv.config(); // Load environment variables first
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,50 +20,28 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors()); // Enable CORS
+app.use(cookieParser()); // Cookie parser for auth, sessions, etc.
 
-// Parse JSON bodies for all routes except /stripe/webhook
+// Use express.json for JSON parsing (with exception for Stripe webhook)
 app.use((req, res, next) => {
-  if (req.originalUrl === '/stripe/webhook') {
-    next();
+  if (req.originalUrl.startsWith('/api/stripe/webhook')) {
+    next(); // Stripe webhook needs raw body, skip JSON parsing
   } else {
-    bodyParser.json()(req, res, next);
+    express.json()(req, res, next); // Parse JSON for other routes
   }
 });
 
-
-
-//not sure if I should use this here
-//app.use(bodyParser.urlencoded({ extended: true }));
-
-
-//And not sure about this
-//app.use(cookieParser());
-
-
-
 // Routes
 app.use('/api/stripe', stripeRoutes);
-
-//I want to add also this
-//for userRoutes
+app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/email', emailRouter);
 
-
-
-
-// Create and export the User model
-/*const UsersModel = model("User", userSchema);
-export default UsersModel;
- app.use('/api/users', userRoutes);
- app.use('/api/products', productRoutes);
- app.use('/api/orders', orderRoutes);*/
-
-// Basic route
+// Base Route
 app.get('/', (req, res) => {
   res.send('E-commerce API is running...');
 });
-
 
 // And the Global error handler
 app.use((err, req, res, next) => {
@@ -68,7 +49,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: err.message });
 });
 
-
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

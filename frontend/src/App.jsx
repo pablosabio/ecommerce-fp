@@ -12,6 +12,8 @@ import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import ProductDetails from './pages/ProductDetails'
 import Checkout from './pages/Checkout'
+import OrderHistory from './pages/OrderHistory'
+import OrderDetails from './pages/OrderDetails'
 
 // import components
 import Footer from './components/Footer'
@@ -34,6 +36,8 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/order/:id" element={<OrderDetails />} />
         </Routes>
       <Footer />
     </CartProvider>
