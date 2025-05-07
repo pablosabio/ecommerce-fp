@@ -2,12 +2,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CartContext } from '../contexts/CartContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const { cartItems, subtotal } = useContext(CartContext); 
+  const { cartItems, subtotal } = useContext(CartContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
   
   // Brand color constant for consistency
   const BRAND_COLOR = "text-orange-500"; // Brand orange color
@@ -185,47 +187,16 @@ export default function Navbar() {
         </div>
 
         {/* Search - Expandable on mobile */}
-        {!isMobile ? (
-          <div className="form-control">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="input input-bordered w-24 md:w-auto"
-            />
-          </div>
-        ) : (
-          <>
-            {!isSearchOpen ? (
-              <button 
-                className="btn btn-ghost btn-circle" 
-                onClick={() => setIsSearchOpen(true)}
-                aria-label="Open search"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            ) : (
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="input input-bordered input-sm w-24 mr-1"
-                  autoFocus
-                />
-                <button 
-                  className="btn btn-ghost btn-circle btn-sm" 
-                  onClick={() => setIsSearchOpen(false)}
-                  aria-label="Close search"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
-          </>
-        )}
+        {/* Search - Only visible on desktop */}
+          {!isMobile && (
+            <div className="form-control">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="input input-bordered w-24 md:w-auto"
+              />
+            </div>
+          )}
 
         {/* Cart with preview - now with orange ring matching user icon */}
         <div className="dropdown dropdown-end">
@@ -303,62 +274,91 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* User */}
-        <div className="dropdown dropdown-end">
-          <div 
-            tabIndex={0} 
-            role="button" 
-            className="btn btn-ghost btn-circle avatar tooltip tooltip-bottom" 
-            data-tip="Account"
-            aria-label="User account"
+       {/* User */}
+<div className="dropdown dropdown-end">
+  <div 
+    tabIndex={0} 
+    role="button" 
+    className="btn btn-ghost btn-circle avatar tooltip tooltip-bottom" 
+    data-tip={isAuthenticated ? user.name : "Account"}
+    aria-label="User account"
+  >
+    <div className="w-10 rounded-full ring ring-orange-500 ring-offset-base-100 ring-offset-2">
+      <img
+        alt="User profile"
+        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+      />
+    </div>
+  </div>
+  <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow animate-fadeIn">
+    {isAuthenticated ? (
+      // Show these options only when user is logged in
+      <>
+        <li className="menu-title pb-0">
+          <span className="text-sm opacity-60">Welcome, {user.name}!</span>
+        </li>
+        <li>
+          <Link to="/profile" className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Profile
+          </Link>
+        </li>
+        <li>
+          <Link to="/orders" className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Orders
+          </Link>
+        </li>
+        <li>
+          <Link to="/settings" className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings
+          </Link>
+        </li>
+        <div className="divider my-1"></div>
+        <li>
+          <button 
+            onClick={logout}
+            className={`${BRAND_COLOR} flex items-center gap-2`}
           >
-            <div className="w-10 rounded-full ring ring-orange-500 ring-offset-base-100 ring-offset-2">
-              <img
-                alt="User profile"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
-            </div>
-          </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow animate-fadeIn">
-            <li className="menu-title pb-0">
-              <span className="text-sm opacity-60">Welcome back!</span>
-            </li>
-            <li>
-              <Link to="/profile" className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                Profile
-              </Link>
-            </li>
-            <li>
-              <Link to="/orders" className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                Orders
-              </Link>
-            </li>
-            <li>
-              <Link to="/settings" className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Settings
-              </Link>
-            </li>
-            <div className="divider my-1"></div>
-            <li>
-              <a className={`${BRAND_COLOR} flex items-center gap-2`}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Log out
-              </a>
-            </li>
-          </ul>
-        </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Log out
+          </button>
+        </li>
+      </>
+    ) : (
+      // When not logged in, only show Login and Register options
+      <>
+        <li>
+          <Link to="/login" className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            </svg>
+            Login
+          </Link>
+        </li>
+        <li>
+          <Link to="/register" className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+            Register
+          </Link>
+        </li>
+      </>
+    )}
+  </ul>
+</div>
+
       </div>
     </div>
   )
