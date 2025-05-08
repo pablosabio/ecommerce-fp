@@ -26,6 +26,7 @@ cd backend
 npm install
 
 3. Create a `.env` file in the backend directory with these values:
+
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 STRIPE_SECRET_KEY=your_stripe_secret_key
@@ -83,7 +84,8 @@ git push origin feature-name
 ## Work in Progress
 
 - User authentication
-- Product reviews and ratings
+- Scraping web to add more products
+- Product reviews and ratings backend
 - Admin dashboard
 - Advanced filtering and sorting
 
@@ -97,4 +99,4 @@ git push origin feature-name
 
 ## Contact
 
-For any questions, reach out to Pablo,
+For any questions, reach out to Pablo :)
