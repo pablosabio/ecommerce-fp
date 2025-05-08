@@ -6,7 +6,7 @@ export default function Carousel() {
     {
       id: "slide1",
       // Using the product IDs we used in the combined code as an example
-      productId: "prod_headphone_qc45",
+      productId: "prod1",
       title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
       offerText: "Limited Time Offer 30% Off",
       imageSrc: "/images/header_headphone_image.webp",
@@ -14,7 +14,7 @@ export default function Carousel() {
     },
     {
       id: "slide2",
-      productId: "prod_ps5_console",
+      productId: "prod4",
       title: "Next-Level Gaming Starts Here - Discover PlayStation 5 Today!",
       offerText: "Flash Sale – Only Today!",
       imageSrc: "/images/dd3l13vfoartrgbvkkh5.webp",
@@ -22,7 +22,7 @@ export default function Carousel() {
     },
     {
       id: "slide3",
-      productId: "prod_macbook_pro_16",
+      productId: "prod4",
       title: "Power Meets Elegance - Apple MacBook Pro is Here for you!",
       offerText: "Exclusive Deal – 20% Off",
       imageSrc: "/images/header_macbook_image.webp",
@@ -53,7 +53,7 @@ export default function Carousel() {
   return (
     <div className="flex justify-center">
       {/* Main carousel container - should have a specific height and relative positioning */}
-      <div className="carousel w-5/6 rounded-lg overflow-hidden relative min-h-[350px] md:min-h-[350px] bg-gray-200"> {/* Added min-height and background color to the container */}
+      <div className="carousel w-5/6 rounded-lg overflow-hidden relative min-h-[400px] md:min-h-[350px] bg-gray-200"> {/* Added min-height and background color to the container */}
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -83,7 +83,7 @@ export default function Carousel() {
                 <div className="flex justify-center md:justify-start gap-3 flex-wrap">
                   <Link
                     // Use specific product ID
-                    to={`/products/${slide.productId}`}
+                    to={`/product/${slide.productId}`}
                     className="btn border-none bg-orange-500 hover:bg-orange-600 text-black"
                   >
                     Buy now
