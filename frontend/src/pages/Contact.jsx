@@ -30,7 +30,7 @@ export default function Contact() {
     const backendUrl = 'http://localhost:5000/api/email/send'; 
 
     // --- Set up email details ---
-    const recipientEmail = 'support@quickcard.com'; // The email address that will receive the message (website owner's email)
+    const recipientEmail = 'supportquickcard@proton.me'; // The email address that will receive the message (website owner's email)
     const emailSubject = `Contact Form Submission from ${formData.name}`; // Subject including sender's name
     // Format email body to include sender info
     const emailBody = `
@@ -111,7 +111,7 @@ export default function Contact() {
                 <span className="text-2xl pt-1 text-primary"><i className="fa-solid fa-envelope"></i></span>
                 <div>
                   <h4 className="font-semibold text-lg">Email</h4>
-                  <p className="text-base-content/80">support@quickcard.com</p>
+                  <p className="text-base-content/80">supportquickcard@proton.me</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
