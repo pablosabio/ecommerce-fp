@@ -28,11 +28,17 @@ npm install
 3. Create a `.env` file in the backend directory with these values:
 
 PORT=5000
+
 MONGODB_URI=your_mongodb_connection_string
+
 STRIPE_SECRET_KEY=your_stripe_secret_key
+
 STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret // Just for Pablo
+
 MAILJET_API_KEY=your_mailjet_api_key
+
 MAILJET_SECRET_KEY=your_mailjet_secret_key
+
 MAILJET_SENDER_EMAIL=supportquickcard@proton.me
 
 5. Set up the frontend:
