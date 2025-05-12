@@ -1,53 +1,75 @@
-import React, { createContext, useState, useEffect } from "react";
+// frontend/src/contexts/AuthContext.jsx
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
-    // initialize user from local storage
+    // Initialize user from local storage
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
-    const [ loading, setLoading] = useState(false);
+    const [token, setToken] = useState(() => {
+        const savedToken = localStorage.getItem('token');
+        return savedToken || null;
+    });
+
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // save user to localstorage whenever it changes
-    useEffect (() => {
-        if(user) {
+    // Save user and token to localStorage whenever they change
+    useEffect(() => {
+        if (user) {
             localStorage.setItem('user', JSON.stringify(user));
         } else {
             localStorage.removeItem('user');
         }
-    }, [user]);
+        
+        if (token) {
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('token');
+        }
+    }, [user, token]);
 
-    const register = async (name, email,   // eslint-disable-next-line no-unused-vars
-        password) => {
+    const register = async (first_name, last_name, email, password) => {
         setLoading(true);
         setError(null);
         
-        // mock register function
         try {
-            //simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // in real app this is API call to register
-            // for now just create mock user
-            const newUser = {
-                id: 'user_' + Date.now(),
-                name,
-                email,
+            const response = await fetch('http://localhost:5000/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // This allows cookies to be sent
+                body: JSON.stringify({
+                    first_name,
+                    last_name,
+                    email,
+                    password
+                })
+            });
+             
+            // First check if the response is valid before trying to parse JSON
+             if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Registration failed with status: ${response.status}`);
+            }
 
-                // do not store actual password in localstorage for security
-                // in real app password would be hashed on the server
-                createdAt: new Date().toISOString()
-            };
+            const data = await response.json();
             
-            setUser(newUser);
-            return newUser;
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+            
+            setUser(data.data.user);
+            setToken(data.data.token);
+            
+            return data.data.user;
         } catch (err) {
-            setError('Registration failed. Please try again.');
+            setError(err.message || 'Registration failed. Please try again.');
             throw err;
         } finally {
             setLoading(false);
@@ -59,43 +81,99 @@ export const AuthProvider = ({ children }) => {
         setError(null);
 
         try {
-            await new Promise (resolve => setTimeout(resolve, 1000));
-
-            // same as before
-            if (!email.includes('@') || !password) {
-                throw new Error ('Invalid credentials');
+            const response = await fetch('http://localhost:5000/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // This allows cookies to be sent
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
             }
-
-            // create a mock user
-            const loggedInUser = {
-                id: 'user_' + Date.now(),
-                name: email.split('@')[0], // extract name from email
-                email,
-                createdAt: new Date().toISOString()
-            };
-            setUser(loggedInUser);
-            return loggedInUser;
+            
+            setUser(data.data.user);
+            setToken(data.data.token);
+            
+            return data.data.user;
         } catch (err) {
-            setError('Login failed. Please check your credentials.');
+            setError(err.message || 'Login failed. Please check your credentials.');
             throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        try {
+            await fetch('http://localhost:5000/api/users/logout', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                credentials: 'include'
+            });
+        } catch (err) {
+            console.error('Logout error:', err);
+        } finally {
+            setUser(null);
+            setToken(null);
+        }
     };
+
+    // Check if token is still valid (can be used on app load)
+    const checkAuthStatus = useCallback(async () => {
+        if (!token) return false;
+        
+        try {
+            const response = await fetch('http://localhost:5000/api/users/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                setUser(null);
+                setToken(null);
+                return false;
+            }
+            
+            const data = await response.json();
+            setUser(data.data);
+            return true;
+        } catch (err) { // eslint-disable-line no-unused-vars
+            setUser(null);
+            setToken(null);
+            return false;
+        }
+    } , [token]);
+
+    // Check authentication status on mount
+    useEffect(() => {
+        if (token) {
+            checkAuthStatus();
+        }
+    }, [token, checkAuthStatus]);
 
     return (
         <AuthContext.Provider
         value={{
             user,
+            token,
             loading,
             error,
             register,
             login,
             logout,
+            checkAuthStatus,
             isAuthenticated: !!user
         }}
         >
