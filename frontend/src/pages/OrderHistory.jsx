@@ -1,9 +1,11 @@
-// src/pages/OrderHistory.jsx
-import React, { useState, useEffect } from 'react';
+// frontend/src/pages/OrderHistory.jsx
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { getOrders } from '../services/orderService';
+import { AuthContext } from '../contexts/AuthContext';
+import { getMyOrders } from '../services/orderService';
 
 const OrderHistory = () => {
+  const { token } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,11 +14,10 @@ const OrderHistory = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const data = await getOrders();
-        setOrders(data);
+        const response = await getMyOrders(token);
+        setOrders(response.data || []);
         setLoading(false);
       } catch (error) {
-        // Using the parameter name "error" instead of "err"
         console.error('Error fetching orders:', error);
         setError('Failed to load orders. Please try again later.');
         setLoading(false);
@@ -24,7 +25,7 @@ const OrderHistory = () => {
     };
 
     fetchOrders();
-  }, []);
+  }, [token]);
 
   // Format date for display
   const formatDate = (dateString) => {

@@ -1,8 +1,13 @@
+// frontend/src/services/orderService.js
 const API_URL = 'http://localhost:5000/api';
 
-export const getOrders = async () => {
+export const getOrders = async (token) => {
     try {
-        const response = await fetch(`${API_URL}/orders`);
+        const response = await fetch(`${API_URL}/orders`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch orders');
         }
@@ -14,10 +19,32 @@ export const getOrders = async () => {
     }
 };
 
-// get order by id
-export const getOrderById = async (orderId) => {
+export const getMyOrders = async (token) => {
     try {
-        const response = await fetch(`${API_URL}/orders/${orderId}`);
+        const response = await fetch(`${API_URL}/orders/my-orders`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch your orders');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching user orders:', error);
+        throw error;
+    }
+};
+
+// get order by id
+export const getOrderById = async (orderId, token) => {
+    try {
+        const response = await fetch(`${API_URL}/orders/${orderId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
         if (!response.ok) {
             throw new Error('Failed to fetch order');
@@ -30,23 +57,25 @@ export const getOrderById = async (orderId) => {
     }
 };
 
-// Later, when user authentication is implemented:
-// Get orders for the current user
-// export const getMyOrders = async (token) => {
-//   try {
-//     const response = await fetch(`${API_URL}/orders/myorders`, {
-//       headers: {
-//         'Authorization': `Bearer ${token}`
-//       }
-//     });
-//     
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch user orders');
-//     }
-//     
-//     return await response.json();
-//   } catch (error) {
-//     console.error('Error fetching user orders:', error);
-//     throw error;
-//   }
-// };
+// create a new order
+export const createOrder = async (orderData, token) => {
+    try {
+        const response = await fetch(`${API_URL}/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(orderData)
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to create order');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error creating order:', error);
+        throw error;
+    }
+};

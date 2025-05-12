@@ -5,10 +5,11 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import corsOptions from './config/cors.js';
-
+// Add this import for body-parser
+import bodyParser from 'body-parser';
 
 // Import Routes
-import stripeRoutes from './routes/stripe.js';
+import stripeRoutes, { webhookHandler } from './routes/stripe.js';
 import orderRoutes from './routes/orderRoutes.js';
 import emailRouter from './routes/emailRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
@@ -26,26 +27,34 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors(corsOptions));
-
 app.use(cookieParser());
-app.use(express.json());
 
-// Stripe webhook needs raw body, use middleware conditionally
+// Use express.json() for all routes except the Stripe webhook
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api/stripe/webhook')) {
+  if (req.originalUrl === '/api/stripe/webhook') {
+    // For Stripe webhook, use raw body
     next();
   } else {
+    // For everything else, parse JSON
     express.json()(req, res, next);
   }
 });
 
+// Special handling for Stripe webhook route
+app.post('/api/stripe/webhook', bodyParser.raw({type: 'application/json'}), webhookHandler);
+
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/images', imageRoutes);
-app.use('/api/stripe', stripeRoutes);
+// Use stripe routes for all paths except webhook (handled above)
+app.use('/api/stripe', (req, res, next) => {
+  if (req.path !== '/webhook') {
+    next();
+  }
+}, stripeRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/email', emailRouter);
-
 
 // Base Route
 app.get('/', (req, res) => {
