@@ -163,6 +163,37 @@ export const AuthProvider = ({ children }) => {
         }
     }, [token, checkAuthStatus]);
 
+    const updateUserDetails = async (userData) => {
+        // if we received updated user data directly, just update the state
+        if (userData) {
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+            return userData;
+        }
+
+        // if we didn't receive updated user data, fetch it from the server
+        try {
+            const response = await fetch('http://localhost:5000/api/users/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to get updated user data');
+            }
+
+            const data = await response.json();
+            setUser(data.data);
+            localStorage.setItem('user', JSON.stringify(data.data));
+            return data.data;
+        } catch (err) {
+            console.error('Error updating user details:', err);
+            throw err;
+        }
+    };
+
     return (
         <AuthContext.Provider
         value={{
@@ -174,6 +205,7 @@ export const AuthProvider = ({ children }) => {
             login,
             logout,
             checkAuthStatus,
+            updateUserDetails,
             isAuthenticated: !!user
         }}
         >

@@ -153,10 +153,14 @@ export const loginUser = async (req, res, next) => {
 };
 
 // UPDATE user
+
 export const updateUser = async (req, res, next) => {
   try {
+    // Get the user ID (from params or the authenticated user)
+    const userId = req.params.id || req.user._id;
+    
     // Check if user is updating own profile or admin is updating
-    if (req.user._id.toString() !== req.params.id && req.user.role !== 'admin') {
+    if (req.user._id.toString() !== userId.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ 
         success: false, 
         message: "You are not authorized to update this user" 
@@ -168,16 +172,37 @@ export const updateUser = async (req, res, next) => {
       delete req.body.role;
     }
     
-    // Hash password if provided
-    if (req.body.password) {
+    // Create update data object
+    const updateData = { ...req.body };
+    
+    // Handle password update if provided
+    if (updateData.password) {
       const salt = await bcrypt.genSalt(10);
-      req.body.password = await bcrypt.hash(req.body.password, salt);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
     }
     
-    // Update user
+    // Handle file upload if provided
+    if (req.file) {
+      try {
+        // Create image entry in database
+        const img = await Image.create({
+          filename: `user_${userId}_${Date.now()}_${req.file.originalname.replace(/\s/g, '_')}`,
+          data: req.file.buffer,
+          contentType: req.file.mimetype
+        });
+        
+        // Set the profile_avatar URL in update data
+        updateData.profile_avatar = `http://localhost:5000/api/images/${img.filename}`;
+      } catch (err) {
+        console.error('Error handling profile image:', err);
+        // Continue with update even if image fails
+      }
+    }
+    
+    // Update user with new data
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
+      userId,
+      { $set: updateData },
       { new: true, runValidators: true }
     ).select("-password");
     
