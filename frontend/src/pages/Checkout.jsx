@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { createPaymentIntent } from '../services/stripe';
@@ -12,6 +13,8 @@ const stripePromise = loadStripe('pk_test_51R1Npr03HVAw8BZ90VVjhIR6riUdbntCelVXl
 const CheckoutForm = () => {
 
   const { cartItems, subtotal, clearCart } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
+
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     email: '',
@@ -37,32 +40,57 @@ const CheckoutForm = () => {
   };
 
   // Get payment intent when page loads
-  useEffect(() => {
-    const getPaymentIntent = async () => {
-      try {
-        // Create metadata with order items
-        const metadata = {
-          products: cartItems.map(item => ({
-            id: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price
-          }))
-        };
-        
-        
-        const { clientSecret } = await createPaymentIntent(subtotal, metadata);
-        setClientSecret(clientSecret);
-      } catch (err) {
-        console.error('Error getting payment intent:', err);
-        setError('Failed to initialize payment. Please try again.');
-      }
-    };
+// In frontend/src/pages/Checkout.jsx - Update the useEffect that gets the payment intent
 
-    if (cartItems.length > 0) {
-      getPaymentIntent();
+// Get payment intent when page loads
+useEffect(() => {
+  const getPaymentIntent = async () => {
+    try {
+      // Create metadata with order items and user ID
+      const metadata = {
+        products: cartItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        // userId: user._id // Add user ID to metadata
+      };
+
+      if (user && user._id) {
+        metadata.userId = user._id; // Add user ID to metadata
+      }
+      
+      const { clientSecret } = await createPaymentIntent(subtotal, metadata);
+      setClientSecret(clientSecret);
+    } catch (err) {
+      console.error('Error getting payment intent:', err);
+      setError('Failed to initialize payment. Please try again.');
     }
-  }, [cartItems, subtotal]);
+  };
+
+  if (cartItems.length > 0) { // check this
+    getPaymentIntent();
+  }
+}, [cartItems, subtotal, user]);
+
+  // Pre-fill shipping info if user is logged in
+useEffect(() => {
+  if (user) {
+    setShippingInfo(prevState => ({
+      ...prevState,
+      name: user.first_name + ' ' + user.last_name || '',
+      email: user.email || '',
+      // Add address fields if user has address information
+      ...(user.address ? {
+        address: user.address.street || '',
+        city: user.address.city || '',
+        state: user.address.state || '',
+        zipCode: user.address.postalCode || ''
+      } : {})
+    }));
+  }
+}, [user]);
 
   // Calculate order summary
   const shipping = 5.99; // Fixed shipping cost
@@ -570,19 +598,19 @@ const CheckoutForm = () => {
   };
 
   // Render current step
-  const renderCurrentStep = () => {
+  // const renderCurrentStep = () => {
 
-    switch (currentStep) {
-      case 1:
-        return renderBillingAddressStep();
-      case 2:
-        return renderPaymentStep();
-      case 3:
-        return renderConfirmationStep();
-      default:
-        return renderBillingAddressStep();
-    }
-  };
+  //   switch (currentStep) {
+  //     case 1:
+  //       return renderBillingAddressStep();
+  //     case 2:
+  //       return renderPaymentStep();
+  //     case 3:
+  //       return renderConfirmationStep();
+  //     default:
+  //       return renderBillingAddressStep();
+  //   }
+  // };
 
   return (
     <div className="space-y-6">
@@ -593,7 +621,10 @@ const CheckoutForm = () => {
         <div className={`step ${currentStep >= 3 ? 'step-primary' : ''}`}>Confirmation</div>
       </div>
       
-      {renderCurrentStep()}
+        {/* Render current step */}
+        {currentStep === 1 ? renderBillingAddressStep() : 
+       currentStep === 2 ? renderPaymentStep() : 
+       renderConfirmationStep()}
     </div>
   );
 };

@@ -1,18 +1,14 @@
 // backend/routes/stripe.js
 import express from 'express';
 import * as stripeController from '../controllers/stripeController.js';
-import bodyParser from 'body-parser';
 
 const router = express.Router();
 
 // Create payment intent route
 router.post('/create-payment-intent', stripeController.createPaymentIntent);
 
-// Webhook route - use raw body parser for Stripe webhooks
-router.post(
-  '/webhook',
-  bodyParser.raw({ type: 'application/json' }),
-  stripeController.handleWebhookEvents
-);
+// We're handling the webhook route at the server.js level now
+// but we still need to export the handler
+export const webhookHandler = stripeController.handleWebhookEvents;
 
 export default router;

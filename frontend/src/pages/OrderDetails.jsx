@@ -1,10 +1,12 @@
-// src/pages/OrderDetails.jsx
-import React, { useState, useEffect } from 'react';
+// frontend/src/pages/OrderDetails.jsx
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getOrderById } from '../services/orderService';
+import { AuthContext } from '../contexts/AuthContext';
 
 const OrderDetails = () => {
   const { id } = useParams();
+  const { token } = useContext(AuthContext);
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,11 +15,10 @@ const OrderDetails = () => {
     const fetchOrder = async () => {
       try {
         setLoading(true);
-        const data = await getOrderById(id);
+        const data = await getOrderById(id, token);
         setOrder(data);
         setLoading(false);
       } catch (error) {
-        // Using the parameter name "error" instead of "err"
         console.error('Error fetching order details:', error);
         setError('Failed to load order details. Please try again later.');
         setLoading(false);
@@ -25,7 +26,7 @@ const OrderDetails = () => {
     };
 
     fetchOrder();
-  }, [id]);
+  }, [id, token]);
 
   // Format date for display
   const formatDate = (dateString) => {

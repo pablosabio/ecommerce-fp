@@ -1,7 +1,7 @@
 // backend/controllers/orderController.js
 import Order from '../models/Order.js';
 
-// Get all orders
+// Get all orders (admin only)
 export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({}).sort({ createdAt: -1 });
@@ -21,6 +21,11 @@ export const getOrderById = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
     
+    // Check if the order belongs to the logged-in user or user is admin
+    if (order.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized to access this order' });
+    }
+    
     res.json(order);
   } catch (error) {
     console.error('Error fetching order:', error);
@@ -28,7 +33,18 @@ export const getOrderById = async (req, res) => {
   }
 };
 
-// Create an order manually (for testing)
+// Get logged in user's orders
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Create an order
 export const createOrder = async (req, res) => {
   try {
     const {
@@ -46,8 +62,9 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: 'No order items' });
     }
     
-    // Create new order
+    // Create new order with user ID from token
     const order = new Order({
+      user: req.user._id, // Set the user ID from the authenticated user
       orderItems,
       shippingAddress,
       paymentMethod,
@@ -65,7 +82,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Update order to paid status manually
+// Update order to paid status
 export const updateOrderToPaid = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -91,7 +108,7 @@ export const updateOrderToPaid = async (req, res) => {
   }
 };
 
-// Update order to delivered status
+// Update order to delivered status (admin only)
 export const updateOrderToDelivered = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);

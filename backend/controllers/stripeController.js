@@ -28,6 +28,7 @@ export const createPaymentIntent = async (req, res) => {
 };
 
 // Handle webhook events from Stripe
+// Handle webhook events from Stripe
 export const handleWebhookEvents = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -37,10 +38,11 @@ export const handleWebhookEvents = async (req, res) => {
   try {
     // Verify the event came from Stripe
     if (endpointSecret) {
+      // The raw body is available in req.body as a Buffer
       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
     } else {
       // If no webhook secret is set, just parse the body as JSON
-      // This is less secure but helps with testing
+      // Note: The body is already a Buffer, so we need to convert it to a string
       const payload = req.body.toString();
       event = JSON.parse(payload);
       console.log('WARNING: Processing webhook without signature verification');
@@ -72,6 +74,8 @@ export const handleWebhookEvents = async (req, res) => {
 };
 
 // Handle successful payments
+// Handle successful payments
+// Handle successful payments
 const handlePaymentIntentSucceeded = async (paymentIntent) => {
   console.log('PaymentIntent was successful:', paymentIntent.id);
   
@@ -82,8 +86,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
       return;
     }
 
-    // Check if we already have an order for this payment intent - try both field names
-    // to be compatible with any existing data
+    // Check if we already have an order for this payment intent
     let existingOrder = await Order.findOne({ 
       $or: [
         { stripePaymentId: paymentIntent.id },
@@ -114,6 +117,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     // Get the items from the payment intent metadata
     let orderItems = [];
     let itemsPrice = 0;
+    let userId = null;
     
     if (paymentIntent.metadata && paymentIntent.metadata.products) {
       try {
@@ -123,13 +127,18 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
         orderItems = products.map(item => ({
           name: item.name,
           quantity: item.quantity,
-          price: item.price || 0, // Fallback to 0 if price isn't available
+          price: item.price || 0,
           productId: item.id
         }));
 
-        // Calculate itemsPrice (if price is available in metadata)
+        // Calculate itemsPrice
         itemsPrice = orderItems.reduce((sum, item) => 
           sum + (item.price * item.quantity), 0);
+          
+        // Get the user ID if available in metadata
+        if (paymentIntent.metadata.userId) {
+          userId = paymentIntent.metadata.userId;
+        }
       } catch (error) {
         console.error('Error parsing products from metadata:', error);
       }
@@ -142,8 +151,9 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
 
     // Create a new order
     const newOrder = new Order({
+      user: userId || '000000000000000000000000', // Use a default ID if no user ID was provided
       orderItems,
-      stripePaymentId: paymentIntent.id, // Using the new field name
+      stripePaymentId: paymentIntent.id,
       paymentMethod: 'Stripe',
       itemsPrice,
       taxPrice,
