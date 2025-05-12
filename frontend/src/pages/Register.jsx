@@ -1,16 +1,26 @@
-// src/pages/Register.jsx
+// frontend/src/pages/Register.jsx
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [passwordError, setPasswordError] = useState('');
   const { register, loading, error } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,18 +29,23 @@ const Register = () => {
     setPasswordError('');
     
     // Basic validation
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       setPasswordError('Passwords do not match');
       return;
     }
     
-    if (password.length < 6) {
+    if (formData.password.length < 6) {
       setPasswordError('Password must be at least 6 characters');
       return;
     }
     
     try {
-      await register(name, email, password);
+      await register(
+        formData.first_name,
+        formData.last_name,
+        formData.email,
+        formData.password
+      );
       navigate('/profile'); // Redirect to profile page after registration
     } catch (err) {
       // Error is handled by the context
@@ -59,43 +74,58 @@ const Register = () => {
             )}
             
             <fieldset className="fieldset">
-              <label className="label">Full Name</label>
+              <label className="label">First Name</label>
               <input 
                 type="text" 
+                name="first_name"
                 className="input input-bordered w-full" 
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                placeholder="John"
+                value={formData.first_name}
+                onChange={handleChange}
+                required
+              />
+              
+              <label className="label">Last Name</label>
+              <input 
+                type="text" 
+                name="last_name"
+                className="input input-bordered w-full" 
+                placeholder="Doe"
+                value={formData.last_name}
+                onChange={handleChange}
                 required
               />
               
               <label className="label">Email</label>
               <input 
                 type="email" 
+                name="email"
                 className="input input-bordered w-full" 
                 placeholder="email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
                 required
               />
               
               <label className="label">Password</label>
               <input 
                 type="password" 
+                name="password"
                 className="input input-bordered w-full" 
                 placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
                 required
               />
               
               <label className="label">Confirm Password</label>
               <input 
                 type="password" 
+                name="confirmPassword"
                 className="input input-bordered w-full" 
                 placeholder="********"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={formData.confirmPassword}
+                onChange={handleChange}
                 required
               />
               

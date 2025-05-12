@@ -1,5 +1,4 @@
-// middlewares/users-validators.js
-
+// middleware/validators.js
 import { body, validationResult } from "express-validator";
 
 export const validateUserRegistration = [

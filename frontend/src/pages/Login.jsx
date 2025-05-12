@@ -1,4 +1,4 @@
-// src/pages/Login.jsx
+// frontend/src/pages/Login.jsx
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
