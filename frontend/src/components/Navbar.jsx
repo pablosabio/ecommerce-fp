@@ -273,21 +273,38 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-
-       {/* User */}
+{/* User */}
 <div className="dropdown dropdown-end">
   <div 
     tabIndex={0} 
     role="button" 
     className="btn btn-ghost btn-circle avatar tooltip tooltip-bottom" 
-    data-tip={isAuthenticated ? user.name : "Account"}
+    data-tip={isAuthenticated ? `${user.first_name} ${user.last_name}` : "Account"}
     aria-label="User account"
   >
     <div className="w-10 rounded-full ring ring-orange-500 ring-offset-base-100 ring-offset-2">
-      <img
-        alt="User profile"
-        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-      />
+      {isAuthenticated ? (
+        user.profile_avatar ? (
+          // User has a custom avatar
+          <img
+            alt={`${user.first_name}'s profile`}
+            src={user.profile_avatar}
+          />
+        ) : (
+          // User is authenticated but has no custom avatar, use Robohash
+          <img 
+            alt={`${user.first_name}'s avatar`} 
+            src={`https://robohash.org/${user.last_name || user.first_name}`} 
+          />
+        )
+      ) : (
+        // Not authenticated, show user icon
+        <div className="bg-white w-full h-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+      )}
     </div>
   </div>
   <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow animate-fadeIn">
@@ -295,7 +312,7 @@ export default function Navbar() {
       // Show these options only when user is logged in
       <>
         <li className="menu-title pb-0">
-          <span className="text-sm opacity-60">Welcome, {user.name}!</span>
+          <span className="text-sm opacity-60">Welcome, {user.first_name}!</span>
         </li>
         <li>
           <Link to="/profile" className="flex items-center gap-2">
@@ -363,119 +380,3 @@ export default function Navbar() {
     </div>
   )
 }
-
-
-// import React from 'react'
-// import { Link } from 'react-router-dom'
-
-// export default function Navbar() {
-//   return (
-//     <div className="navbar bg-base-100 shadow-sm fixed top-0 z-50 pl-5">
-//       {/* LEFT PART - LOGO AND BURGER MENU */}
-//       <div className="navbar-start">
-//         {/* Hamburger menu (only visible on small screens) */}
-//         <div className="lg:hidden mr-2">
-//           <div className="dropdown">
-//             <label tabIndex={0} className="btn btn-ghost">
-//               <svg
-//                 xmlns="http://www.w3.org/2000/svg"
-//                 className="h-5 w-5"
-//                 fill="none"
-//                 viewBox="0 0 24 24"
-//                 stroke="currentColor">
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth="2"
-//                   d="M4 6h16M4 12h16M4 18h16" />
-//               </svg>
-//             </label>
-//             <ul
-//               tabIndex={0}
-//               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-//               <li><Link to="/">Home</Link></li>
-//               <li><Link to="/shop">Shop</Link></li>
-//               <li><Link to="/about">About Us</Link></li>
-//               <li><Link to="/contact">Contact Us</Link></li>
-//             </ul>
-//           </div>
-//         </div>
-        
-//         {/* Logo */}
-//         <Link to="/" className="btn btn-ghost text-2xl font-extrabold inline-flex items-center gap-0">
-//           Quick<span className="text-[#FF9800]">Cart</span>
-//         </Link>
-//       </div>
-
-//       {/* CENTER - HORIZONTAL LINKS (only visible on large screens) */}
-//       <div className="navbar-center hidden lg:flex">
-//         <ul className="menu menu-horizontal px-1 text-lg font-medium">
-//           <li><Link to="/">Home</Link></li>
-//           <li><Link to="/shop">Shop</Link></li>
-//           <li><Link to="/about">About Us</Link></li>
-//           <li><Link to="/contact">Contact Us</Link></li>
-//         </ul>
-//       </div>
-
-//       {/* RIGHT PART - THEME CHANGER, SEARCH, CART, USER */}
-//       <div className="navbar-end gap-3">
-//         {/* Change theme */}
-//         <label className="toggle text-base-content">
-//           <input type="checkbox" value="dark" className="theme-controller" />
-//           <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
-//           <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
-//         </label>
-
-//         {/* Search */}
-//         <input
-//           type="text"
-//           placeholder="Search..."
-//           className="input input-bordered w-24 md:w-auto"
-//         />
-
-//         {/* Cart */}
-//         <div className="dropdown dropdown-end">
-//           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-//             <div className="indicator">
-//               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-//                 viewBox="0 0 24 24" stroke="currentColor">
-//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-//                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0
-//                   0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-//               </svg>
-//               <span className="badge badge-sm indicator-item">8</span>
-//             </div>
-//           </div>
-//           <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
-//             <div className="card-body">
-//               <span className="text-lg font-bold">8 products</span>
-//               <span className="text-info">Subtotal: $999</span>
-//               <div className="card-actions">
-//                 <button className="btn btn-primary btn-block">
-//                   <Link to="/cart">Go to cart</Link>
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* User */}
-//         <div className="dropdown dropdown-end">
-//           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-//             <div className="w-10 rounded-full">
-//               <img
-//                 alt="User"
-//                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-//               />
-//             </div>
-//           </div>
-//           <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-//             <li><Link to="/profile">Profile</Link></li>
-//             <li><Link to="/settings">Settings</Link></li>
-//             <li><a>Log out</a></li>
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
