@@ -3,7 +3,7 @@ import productsData from '../data/products.json'; // Import the JSON data direct
 import { CartContext } from "../contexts/CartContext"; // Added this for the Cart - Pablo
 
 // ProductCard component 
-const ProductCard = ({
+export const ProductCard = ({
   id, 
   name,
   imageSrc,
