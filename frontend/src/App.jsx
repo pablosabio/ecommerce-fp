@@ -18,9 +18,12 @@ import OrderHistory from './pages/OrderHistory'
 import OrderDetails from './pages/OrderDetails'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import SearchPage from './pages/SearchPage';
+
 // import components
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+
 
 function App() {
 
@@ -41,7 +44,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path='/cart' element={<Cart />} />
-
+              <Route path="/search" element={<SearchPage />} /> 
               {/* protected routes */}
               <Route element={<ProtectedRoute />}>
                 <Route path='/profile' element={<Profile />} />
