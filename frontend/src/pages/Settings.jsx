@@ -1,5 +1,4 @@
 // In frontend/src/pages/Settings.jsx
-// First, import necessary hooks at the top
 import React, { useState, useContext, useRef } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -27,24 +26,57 @@ const SettingsPage = () => {
     setPasswordData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleChangePasswordSubmit = (e) => {
-    e.preventDefault();
-    setPasswordStatus('');
+const handleChangePasswordSubmit = async (e) => {
+  e.preventDefault();
+  setPasswordStatus('');
 
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setPasswordStatus('Error: New passwords do not match.');
-      return;
+  // Client-side validation
+  if (passwordData.newPassword !== passwordData.confirmPassword) {
+    setPasswordStatus('Error: New passwords do not match.');
+    return;
+  }
+  if (passwordData.newPassword.length < 6) {
+    setPasswordStatus('Error: New password must be at least 6 characters long.');
+    return;
+  }
+
+  try {
+    // Show loading state
+    setPasswordStatus('Processing...');
+    
+    // Make API call to update password
+    const response = await fetch('http://localhost:5000/api/users/change-password', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to update password');
     }
-    if (passwordData.newPassword.length < 6) {
-      setPasswordStatus('Error: New password must be at least 6 characters long.');
-      return;
-    }
-    // Here you can add logic to call the backend to change the password
-    console.log('Attempting to change password (mock):', passwordData);
-    setPasswordStatus('Success: Password change request submitted (mock).');
-    // Clear fields after a "successful" (mock) attempt
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  };
+
+    // Password updated successfully
+    setPasswordStatus('Success: Password updated successfully.');
+    
+    // Clear form fields
+    setPasswordData({ 
+      currentPassword: '', 
+      newPassword: '', 
+      confirmPassword: '' 
+    });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    setPasswordStatus(`Error: ${error.message || 'Failed to update password'}`);
+  }
+};
 
   // NEW - Profile image handlers
   const handleImageChange = (e) => {

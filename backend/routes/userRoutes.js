@@ -9,6 +9,7 @@ import {
     deleteUser,
     getCurrentUser,
     logoutUser,
+    changePassword,
 } from '../controllers/userController.js';
 
 import { auth } from '../middleware/authMiddleware.js';
@@ -43,6 +44,7 @@ router.post("/logout", logoutUser);
 // Protected routes
 router.get("/me", auth, getCurrentUser);
 router.put("/me", auth, upload.single("profile_image"), updateUser);
+router.put("/change-password", auth, changePassword);
 
 // Admin routes
 router.get("/", auth, isAdmin, getAllUsers);
