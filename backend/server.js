@@ -14,6 +14,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import emailRouter from './routes/emailRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 // Load env variables
 dotenv.config();
@@ -55,6 +56,8 @@ app.use('/api/stripe', (req, res, next) => {
 }, stripeRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/email', emailRouter);
+app.use('/api/products', productRoutes);
+
 
 // Base Route
 app.get('/', (req, res) => {
