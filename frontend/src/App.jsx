@@ -19,6 +19,7 @@ import OrderDetails from './pages/OrderDetails'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import SearchPage from './pages/SearchPage';
+import CategoryPage from './pages/CategoryPage'
 
 // import components
 import Footer from './components/Footer'
@@ -41,10 +42,13 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/category/:category" element={<CategoryPage />} /> {/* New route for categories */}
+
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path='/cart' element={<Cart />} />
               <Route path="/search" element={<SearchPage />} /> 
+
               {/* protected routes */}
               <Route element={<ProtectedRoute />}>
                 <Route path='/profile' element={<Profile />} />
