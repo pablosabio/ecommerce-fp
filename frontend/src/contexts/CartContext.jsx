@@ -16,26 +16,33 @@ export const CartProvider = ({ children }) => {
     }, [cartItems]);
 
     // Add item to cart
-    const addToCart = (product, quantity = 1) => {
-        setCartItems(prevItems => {
-            // Check if the item already exists in the cart
-            const existingItemIndex = prevItems.findIndex(item => item.id === product.id);
+    // frontend/src/contexts/CartContext.jsx
+// In the addToCart function
 
-            if (existingItemIndex > -1) {
-                // If it exists, update the quantity
-                const updatedItems = [...prevItems];
-                updatedItems[existingItemIndex] = {
-                    ...updatedItems[existingItemIndex],
-                    quantity: updatedItems[existingItemIndex].quantity + quantity,
-                };
-                return updatedItems;
-            } else {
-                // Add new item to the cart
-                return [...prevItems, { ...product, quantity }];
-            }
-        });
-    };
+const addToCart = (product, quantity = 1) => {
+    setCartItems(prevItems => {
+        // Check if the item already exists in the cart
+        const existingItemIndex = prevItems.findIndex(item => item.id === product.id);
 
+        if (existingItemIndex > -1) {
+            // If it exists, update the quantity
+            const updatedItems = [...prevItems];
+            updatedItems[existingItemIndex] = {
+                ...updatedItems[existingItemIndex],
+                quantity: updatedItems[existingItemIndex].quantity + quantity,
+            };
+            return updatedItems;
+        } else {
+            // Add new item to the cart
+            // Make sure it includes the image path from the product's images array
+            return [...prevItems, { 
+                ...product, 
+                quantity,
+                imageSrc: product.images ? product.images[0] : product.imageSrc
+            }];
+        }
+    });
+};
     // Remove item from cart
     const removeFromCart = (productId) => {
         setCartItems(prevItems => prevItems.filter(item => item.id !== productId));

@@ -1,17 +1,17 @@
 // frontend/src/pages/ProductDetails.jsx
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
 import { CartContext } from "../contexts/CartContext";
 import { products } from '../data/products';
-import { getProductImage } from '../utils/imagePlaceholders';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  // New state for user rating & review
+  // State for user rating & review
   const [userRating, setUserRating] = useState(0);
   const [userReview, setUserReview] = useState("");
 
@@ -36,7 +36,7 @@ const ProductDetails = () => {
         id: product.id,
         name: product.name,
         price: product.price,
-        imageSrc: product.imageSrc || getProductImage(product.id),
+        imageSrc: product.images[0], // Use the first image of the new images array
       }, quantity);
     }
   };
@@ -46,7 +46,20 @@ const ProductDetails = () => {
     setQuantity(newQuantity);
   };
 
-  // ─── Review submission handler ─────────────────────────
+  // Functions for the image carousel
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % 3);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + 3) % 3);
+  };
+
+  const setImage = (index) => {
+    setCurrentImageIndex(index);
+  };
+
+  // Review submission handler
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!userRating || !userReview.trim()) {
@@ -85,8 +98,6 @@ const ProductDetails = () => {
   }
 
   const roundedRating = Math.round(product.rating);
-  // Get product image - use provided image or placeholder
-  const productImage = product.imageSrc || getProductImage(product.id);
 
   return (
     <div className="container mx-auto p-4 md:p-8 mt-16 md:mt-20">
@@ -100,17 +111,47 @@ const ProductDetails = () => {
         </ul>
       </div>
 
-      {/* Main product card with controlled height */}
-      <div className="card lg:card-side bg-base-100 shadow-xl border border-base-200 lg:h-[800px]">
-        {/* Image with left-only rounded corners */}
-        <figure className="lg:w-2/5 bg-gray-100 rounded-l-lg h-[300px] lg:h-full">
-          <img
-            src={productImage}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
-        </figure>
+      {/* Main product card */}
+      <div className="card lg:card-side bg-base-100 shadow-xl border border-base-200 lg:min-h-[600px]">
+        {/* Image carousel section */}
+        <div className="lg:w-2/5 bg-white rounded-l-lg h-[300px] md:h-auto relative">
+          {/* Main image carousel */}
+          <div className="carousel w-full h-full">
+            {product.images && product.images.map((image, index) => (
+              <div 
+                id={`slide-${index}`} 
+                key={index} 
+                className={`carousel-item relative w-full h-full ${currentImageIndex === index ? 'block' : 'hidden'}`}
+              >
+                <img 
+                  src={image} 
+                  alt={`${product.name} - View ${index + 1}`} 
+                  className="w-full h-full object-contain p-4"
+                />
+              </div>
+            ))}
+          </div>
+          
+          {/* Carousel navigation buttons */}
+          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+            <button onClick={prevImage} className="btn btn-circle btn-sm bg-base-100 bg-opacity-70">❮</button>
+            <button onClick={nextImage} className="btn btn-circle btn-sm bg-base-100 bg-opacity-70">❯</button>
+          </div>
+          
+          {/* Thumbnail navigation dots */}
+          <div className="flex justify-center w-full py-2 gap-2 absolute bottom-0">
+            {[0, 1, 2].map((index) => (
+              <button 
+                key={index}
+                className={`w-3 h-3 rounded-full ${currentImageIndex === index ? 'bg-primary' : 'bg-base-300'}`}
+                onClick={() => setImage(index)}
+                aria-label={`Go to image ${index + 1}`}
+              ></button>
+            ))}
+          </div>
+        </div>
 
+        {/* Product details */}
         <div className="card-body p-4 lg:p-6 lg:w-3/5 overflow-y-auto">
           <h2 className="card-title text-2xl lg:text-3xl mb-2">{product.name}</h2>
           
@@ -206,8 +247,9 @@ const ProductDetails = () => {
             <button
               onClick={handleAddToCart}
               className="btn btn-primary flex-grow"
+              disabled={!product.inStock}
             >
-              Add to Cart
+              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
           </div>
           

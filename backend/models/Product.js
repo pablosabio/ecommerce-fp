@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    index: true // Add index for faster category filtering
+    index: true
   },
   price: {
     type: Number,
@@ -37,9 +37,23 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  imageSrc: {
-    type: String,
-    required: true
+  // Remove the old single image field
+  // imageSrc: {
+  //   type: String,
+  //   required: true
+  // },
+  // Add the new images array field
+  images: {
+    type: [String],
+    required: true,
+    validate: [
+      {
+        validator: function(array) {
+          return array.length === 3;
+        },
+        message: 'Each product must have exactly 3 images'
+      }
+    ]
   },
   features: {
     type: [String],
