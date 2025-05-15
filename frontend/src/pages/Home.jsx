@@ -1,11 +1,15 @@
 import Carousel from "../components/Carousel";
-import Cards from '../components/Cards'
+import FeatureCards from "../components/FeaturedCards";
+import FeaturedProducts from "../components/FeaturedProducts";
+import NewsletterSubscribe from "../components/NewsletterSuscribe";
 
 export default function Home() {
   return (
     <div className="pt-24">
       <Carousel />
-      <Cards />
+      <FeaturedProducts />
+      <FeatureCards />
+      <NewsletterSubscribe />
     </div>
   );
 }
