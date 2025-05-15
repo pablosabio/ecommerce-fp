@@ -9,7 +9,7 @@ import { getProductImage } from '../utils/imagePlaceholders';
 export const ProductCard = ({
   id,
   name,
-  imageSrc,
+  images,
   price,
   rating,
   reviewCount,
@@ -19,7 +19,7 @@ export const ProductCard = ({
   const { addToCart } = useContext(CartContext);
   
   // Get image source - use provided image or fallback to placeholder
-  const productImage = imageSrc || getProductImage(id);
+  const productImage = images ? images[0] : getProductImage(id);
 
   const handleAddToCart = () => {
     const product = {
@@ -45,17 +45,17 @@ export const ProductCard = ({
   };
 
   return (
-    <div className="card w-full bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300">
-      {/* Product image */}
-   <figure className="bg-gray-100 dark:bg-gray-200 aspect-square overflow-hidden">
-  <Link to={`/product/${id}`} className="w-full h-full">
-    <img
-      src={productImage}
-      alt={name}
-      className="w-full h-full object-cover"
-    />
-  </Link>
-</figure>
+   <div className="card w-full bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300">
+      {/* Product image - use first image from array */}
+      <figure className="bg-white aspect-square overflow-hidden">
+        <Link to={`/product/${id}`} className="w-full h-full flex items-center justify-center">
+          <img
+            src={productImage}
+            alt={name}
+            className="w-4/5 h-4/5 object-contain"
+          />
+        </Link>
+      </figure>
 
 
       <div className="card-body p-4">
