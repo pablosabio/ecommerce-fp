@@ -53,15 +53,22 @@ export default function Profile() {
         {/* Profile Summary Card */}
         <div className="card bg-base-100 shadow-xl md:col-span-1">
           <div className="card-body items-center text-center">
-            <div className="avatar">
-              <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                {user.profile_avatar ? (
-                  <img src={user.profile_avatar} alt={`${user.first_name}'s avatar`} />
-                ) : (
-                  <img src={`https://robohash.org/${user.last_name}`} alt="Default avatar" />
-                )}
-              </div>
-            </div>
+{/* Profile Avatar Section */}
+<div className="avatar">
+  <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+    {user.profile_avatar ? (
+      <img 
+        src={user.profile_avatar} 
+        alt={`${user.first_name}'s avatar`} 
+      />
+    ) : (
+      <img 
+        src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${user.email}&backgroundColor=FF6B35,FFBA86&backgroundType=gradientLinear`} 
+        alt={`${user.first_name}'s avatar`} 
+      />
+    )}
+  </div>
+</div>
             <h2 className="card-title mt-4">{user.first_name} {user.last_name}</h2>
             <p className="text-sm text-gray-500">{user.email}</p>
             <p className="text-xs mt-2">Member since {formatDate(user.createdAt)}</p>

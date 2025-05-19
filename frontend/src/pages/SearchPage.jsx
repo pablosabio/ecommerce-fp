@@ -1,8 +1,8 @@
 // src/pages/SearchPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import productsData from '../data/products.json';
 import { ProductCard } from '../components/Cards'; 
+import { products, loadProducts } from '../data/products';
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -11,21 +11,33 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (query) {
-      setLoading(true);
-      const lowerCaseQuery = query.toLowerCase();
+    const performSearch = async () => {
+      if (query) {
+        setLoading(true);
+        
+        try {
+          // Ensure products are loaded first
+          await loadProducts();
+          
+          const lowerCaseQuery = query.toLowerCase();
+          const filteredProducts = products.filter(product =>
+            (product.name && product.name.toLowerCase().includes(lowerCaseQuery)) ||
+            (product.description && product.description.toLowerCase().includes(lowerCaseQuery)) ||
+            (product.category && product.category.toLowerCase().includes(lowerCaseQuery))
+          );
+          
+          setSearchResults(filteredProducts);
+        } catch (error) {
+          console.error('Error searching products:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    };
 
-      const filteredProducts = productsData.filter(product =>
-        (product.name && product.name.toLowerCase().includes(lowerCaseQuery)) ||
-        (product.description && product.description.toLowerCase().includes(lowerCaseQuery)) ||
-        (product.category && product.category.toLowerCase().includes(lowerCaseQuery))
-      );
-
-      setSearchResults(filteredProducts);
-      setLoading(false);
-    } else {
-      setSearchResults([]);
-    }
+    performSearch();
   }, [query]);
 
   return (
@@ -47,7 +59,7 @@ const SearchPage = () => {
           <p className="mt-2">Searching...</p>
         </div>
       ) : searchResults.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"> {/* تم تغيير xl:grid-cols-5 ليتناسب مع البطاقات الأكبر */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {searchResults.map(product => (
             <ProductCard key={product.id} {...product} />
           ))}
