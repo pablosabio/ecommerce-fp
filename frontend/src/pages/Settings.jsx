@@ -168,17 +168,23 @@ const handleChangePasswordSubmit = async (e) => {
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Current Avatar */}
               <div className="flex flex-col items-center">
-                <div className="avatar">
-                  <div className="w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                    {avatarPreview ? (
-                      <img src={avatarPreview} alt="Preview" />
-                    ) : user?.profile_avatar ? (
-                      <img src={user.profile_avatar} alt="Current avatar" />
-                    ) : (
-                      <img src={`https://robohash.org/${user?.last_name || 'user'}`} alt="Default avatar" />
-                    )}
-                  </div>
-                </div>
+
+           {/* Avatar Preview */}
+<div className="avatar">
+  <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+    {avatarPreview ? (
+      <img src={avatarPreview} alt="Preview" />
+    ) : user?.profile_avatar ? (
+      <img src={user.profile_avatar} alt="Current avatar" />
+    ) : (
+      <img 
+        src={`https://api.dicebear.com/7.x/thumbs/svg?seed=${user?.email || 'default'}&backgroundColor=FF6B35,FFBA86&backgroundType=gradientLinear`} 
+        alt="Default avatar" 
+      />
+    )}
+  </div>
+</div>
+
                 <p className="text-sm mt-2 text-center">
                   {avatarPreview ? "Preview" : "Current Avatar"}
                 </p>

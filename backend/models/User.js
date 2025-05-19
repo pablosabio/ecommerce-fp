@@ -41,7 +41,7 @@ const userSchema = new Schema(
     profile_avatar: {
       type: String,
       default() {
-        return `https://robohash.org/${this.last_name}`;
+        return `https://api.dicebear.com/7.x/thumbs/svg?seed=${this.email}&backgroundColor=FF6B35,FFBA86&backgroundType=gradientLinear`;
       },
     },
     address: {

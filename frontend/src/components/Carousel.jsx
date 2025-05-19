@@ -75,21 +75,50 @@ export default function Carousel() {
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-black leading-snug mb-4">
                   {item.name} - Experience Excellence!
                 </h2>
-                <div className="flex justify-center md:justify-start gap-3 flex-wrap">
-                  <Link
-                    to={`/product/${item.targetProductId}`}
-                    className="btn border-none bg-orange-500 hover:bg-orange-600 text-black"
-                  >
-                    Buy now
-                  </Link>
-                  <Link
-                    to="/shop"
-                    className="btn bg-transparent border-black text-black dark:border-black dark:text-black hover:bg-transparent"
-                  >
-                    Find more
-                  </Link>
-                </div>
+
+
+
+<div className="flex justify-center md:justify-start gap-4 flex-wrap">
+
+<Link
+  to={`/product/${item.targetProductId}`}
+  className="group relative rounded-lg px-8 py-3 bg-orange-500 border-2 border-orange-500 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:border-orange-600 overflow-hidden"
+>
+  <span className="transition-transform duration-300 transform group-hover:translate-x-3 inline-block">Buy now</span>
+  <div className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+    </svg>
+  </div>
+</Link>
+  
+<Link
+  to="/shop"
+  className="group relative rounded-lg px-8 py-3 bg-transparent border-2 border-black text-black font-medium transition-all duration-300 hover:bg-gray-50 overflow-hidden"
+>
+  <span className="transition-transform duration-300 transform group-hover:-translate-x-2 inline-block">Find more</span>
+  <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </div>
+</Link>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
               </div>
+
               {/* Image - Added padding to move away from edge */}
               <div className="flex justify-center flex-shrink-0 md:pr-24 lg:pr-28">
                 <img
