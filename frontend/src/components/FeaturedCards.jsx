@@ -8,14 +8,14 @@ export default function FeatureCards() {
       id: 1,
       title: "Unparalleled Sound",
       description: "Experience crystal-clear audio with premium headphones.",
-      image: "https://res.cloudinary.com/dnhduqv8j/image/upload/v1747321949/girl_with_headphone_image_bbxwx1.png", 
+      image: "https://images.pexels.com/photos/3755833/pexels-photo-3755833.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
       link: "/product/audio-001", 
     },
     {
       id: 2,
       title: "Stay Connected",
       description: "Compact and stylish earphones for every occasion.",
-      image: "https://res.cloudinary.com/dnhduqv8j/image/upload/v1747321946/girl_with_earphone_image_pbjtvt.png", 
+      image: "https://images.pexels.com/photos/8553999/pexels-photo-8553999.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
       link: "/product/audio-003",
     },
     {
