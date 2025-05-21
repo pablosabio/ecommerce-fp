@@ -1,8 +1,6 @@
-// frontend/src/pages/Contact.jsx
 import React, { useState } from 'react';
 
 export default function Contact() {
-  // State for form data and submission status
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,7 +9,6 @@ export default function Contact() {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Function to handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({

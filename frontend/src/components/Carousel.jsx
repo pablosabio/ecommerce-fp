@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   
-  // Define your carousel items directly - no need to fetch products
   const carouselItems = [
     {
       id: "slide1",

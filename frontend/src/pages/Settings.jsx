@@ -1,9 +1,7 @@
-// In frontend/src/pages/Settings.jsx
 import React, { useState, useContext, useRef } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const SettingsPage = () => {
-  // Keep existing states and add new ones for profile image
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -11,16 +9,13 @@ const SettingsPage = () => {
   });
   const [passwordStatus, setPasswordStatus] = useState('');
   
-  // New states for profile image
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
   
-  // Get user context
   const { user, token, updateUserDetails } = useContext(AuthContext);
 
-  // Password handlers (keep existing ones)
   const handlePasswordInputChange = (e) => {
     const { name, value } = e.target;
     setPasswordData(prev => ({ ...prev, [name]: value }));
@@ -30,7 +25,6 @@ const handleChangePasswordSubmit = async (e) => {
   e.preventDefault();
   setPasswordStatus('');
 
-  // Client-side validation
   if (passwordData.newPassword !== passwordData.confirmPassword) {
     setPasswordStatus('Error: New passwords do not match.');
     return;
@@ -41,10 +35,8 @@ const handleChangePasswordSubmit = async (e) => {
   }
 
   try {
-    // Show loading state
     setPasswordStatus('Processing...');
     
-    // Make API call to update password
     const response = await fetch('http://localhost:5000/api/users/change-password', {
       method: 'PUT',
       headers: {
@@ -63,10 +55,9 @@ const handleChangePasswordSubmit = async (e) => {
       throw new Error(data.message || 'Failed to update password');
     }
 
-    // Password updated successfully
     setPasswordStatus('Success: Password updated successfully.');
     
-    // Clear form fields
+    
     setPasswordData({ 
       currentPassword: '', 
       newPassword: '', 
@@ -78,24 +69,20 @@ const handleChangePasswordSubmit = async (e) => {
   }
 };
 
-  // NEW - Profile image handlers
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Check file size (limit to 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setUploadStatus('Error: Image size should not exceed 5MB');
         return;
       }
       
-      // Check file type
       if (!file.type.match('image.*')) {
         setUploadStatus('Error: Please select an image file');
         return;
       }
       
-      // Preview the image
       const reader = new FileReader();
       reader.onload = (e) => {
         setAvatarPreview(e.target.result);

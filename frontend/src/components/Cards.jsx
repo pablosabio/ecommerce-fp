@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
 import { getProductImage } from '../utils/imagePlaceholders';
 
-// ProductCard component - Displays a single product card
 export const ProductCard = ({
   id,
   name,
@@ -13,10 +12,8 @@ export const ProductCard = ({
   reviewCount,
   category
 }) => {
-  // Use the CartContext to add items to the cart
   const { addToCart } = useContext(CartContext);
   
-  // Get image source - use provided image or fallback to placeholder
   const productImage = images ? images[0] : getProductImage(id);
 
   const handleAddToCart = () => {

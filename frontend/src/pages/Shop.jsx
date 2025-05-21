@@ -1,4 +1,3 @@
-// frontend/src/pages/Shop.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProductsGrid } from '../components/Cards';
@@ -11,20 +10,16 @@ export default function Shop() {
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
-  // Get all unique categories from products
   const categories = [...new Set(products.map(product => product.category))];
   
-  // Filter products
   let filteredProducts = [...products];
   
-  // Filter by category
   if (filterCategory) {
     filteredProducts = filteredProducts.filter(product => 
       product.category === filterCategory
     );
   }
   
-  // Filter by price range
   if (priceRange.min !== '') {
     filteredProducts = filteredProducts.filter(product => 
       product.price >= Number(priceRange.min)
@@ -37,7 +32,6 @@ export default function Shop() {
     );
   }
   
-  // Sort products
   if (sortBy === 'price-asc') {
     filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sortBy === 'price-desc') {
@@ -50,7 +44,6 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen pt-24">
-      {/* Mobile filter toggle button - Only visible on small screens */}
       <div className="lg:hidden container mx-auto px-4 mb-4">
         <button 
           className="btn btn-primary btn-block"
@@ -64,12 +57,10 @@ export default function Shop() {
       </div>
 
       <div className="flex flex-col lg:flex-row">
-        {/* SIDEBAR - Hidden on mobile unless toggled, fixed position on large screens */}
         <div className={`w-full lg:w-64 px-4 lg:pl-8 lg:pr-4 ${isMobileFilterOpen ? 'block' : 'hidden'} lg:block lg:flex-shrink-0`}>
           <div className="bg-base-100 shadow rounded-lg p-4 lg:sticky lg:top-24">
             <h2 className="text-xl font-semibold mb-4">Filters</h2>
             
-            {/* Category filter */}
             <div className="mb-4">
               <label className="font-medium block mb-2">Category</label>
               <select 
@@ -86,7 +77,6 @@ export default function Shop() {
               </select>
             </div>
             
-            {/* Price range filter */}
             <div className="mb-4">
               <label className="font-medium block mb-2">Price Range</label>
               <div className="flex items-center gap-2">
@@ -108,7 +98,6 @@ export default function Shop() {
               </div>
             </div>
             
-            {/* Sort options */}
             <div className="mb-4">
               <label className="font-medium block mb-2">Sort By</label>
               <select 
@@ -124,7 +113,6 @@ export default function Shop() {
               </select>
             </div>
             
-            {/* Reset filters button */}
             <button 
               className="btn btn-outline w-full mt-2"
               onClick={() => {
@@ -136,7 +124,6 @@ export default function Shop() {
               Reset Filters
             </button>
 
-            {/* Close button - Only visible on mobile */}
             <button 
               className="btn btn-outline btn-block mt-4 lg:hidden"
               onClick={() => setIsMobileFilterOpen(false)}
@@ -146,11 +133,9 @@ export default function Shop() {
           </div>
         </div>
         
-        {/* MAIN CONTENT */}
         <div className="flex-grow px-4 md:px-6 lg:px-8">
           <h1 className="text-3xl font-bold mb-6">Our Products</h1>
           
-          {/* Category quick links */}
           {!filterCategory && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
               {categories.map(category => (
@@ -177,7 +162,6 @@ export default function Shop() {
             </div>
           )}
           
-          {/* Products grid */}
           {filteredProducts.length > 0 ? (
             <ProductsGrid 
               title={filterCategory ? `${filterCategory.charAt(0).toUpperCase() + filterCategory.slice(1)} Products` : "All Products"} 

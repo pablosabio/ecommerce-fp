@@ -6,7 +6,6 @@ const BRAND_COLOR = "text-orange-500";
 export default function About() {
   return (
     <div className="pt-18 min-h-screen">
-      {/* Hero Section */}
       <section className="bg-base-200 py-8 md:py-16">
         <div className="container mx-auto px-4 md:px-8 max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -28,7 +27,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Story Section */}
       <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -56,7 +54,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values Section with Cards */}
       <section className="bg-base-100 py-16">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           <div className="text-center mb-12">

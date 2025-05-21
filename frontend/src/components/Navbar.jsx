@@ -1,4 +1,3 @@
-// Updated Navbar.jsx with enhanced styling
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
@@ -13,7 +12,6 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Brand color constants for consistency
   const BRAND_COLOR = "text-orange-500";
   const BRAND_BG = "bg-orange-500";
   const BRAND_HOVER = "hover:bg-orange-600";

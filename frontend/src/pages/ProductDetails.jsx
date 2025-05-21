@@ -1,4 +1,3 @@
-// frontend/src/pages/ProductDetails.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
@@ -11,17 +10,14 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  // State for user rating & review
   const [userRating, setUserRating] = useState(0);
   const [userReview, setUserReview] = useState("");
 
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
-    // Find product by ID from our products data
     const foundProduct = products.find(p => p.id.toString() === id);
     
-    // Set a slight delay to simulate loading from a real API
     const timer = setTimeout(() => {
       setProduct(foundProduct);
       setLoading(false);

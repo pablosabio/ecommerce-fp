@@ -26,27 +26,21 @@ const CheckoutForm = () => {
   const [clientSecret, setClientSecret] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1); // Track current step
-  const [paymentStatus, setPaymentStatus] = useState(null); // 'success' or 'error'
+  const [currentStep, setCurrentStep] = useState(1);
+  const [paymentStatus, setPaymentStatus] = useState(null); 
   const [orderId, setOrderId] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setShippingInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Get payment intent when page loads
-// In frontend/src/pages/Checkout.jsx - Update the useEffect that gets the payment intent
-
-// Get payment intent when page loads
 useEffect(() => {
   const getPaymentIntent = async () => {
     try {
-      // Create metadata with order items and user ID
       const metadata = {
         products: cartItems.map(item => ({
           id: item.id,

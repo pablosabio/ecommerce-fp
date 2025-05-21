@@ -1,4 +1,3 @@
-// frontend/src/components/NewsletterSubscribe.jsx
 import React, { useState } from 'react';
 
 export default function NewsletterSubscribe() {

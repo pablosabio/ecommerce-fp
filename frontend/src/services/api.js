@@ -1,29 +1,25 @@
 // frontend/src/services/api.js
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// Helper function for making API requests
 const fetchApi = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
   
-  // Default headers
+  
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers
   };
   
-  // Add authorization header if token exists
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
   
-  // Merge options with defaults
   const config = {
     ...options,
     headers,
-    credentials: 'include' // Include cookies
+    credentials: 'include'
   };
   
-  // Make the fetch request without unnecessary try/catch
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
   const data = await response.json();
   
@@ -34,7 +30,6 @@ const fetchApi = async (endpoint, options = {}) => {
   return data;
 };
 
-// User related API calls
 export const userApi = {
   register: (userData) => fetchApi('/users/register', {
     method: 'POST',
@@ -59,12 +54,11 @@ export const userApi = {
   
   uploadAvatar: (formData) => fetchApi('/users/me/avatar', {
     method: 'POST',
-    headers: {}, // Remove content-type header, FormData will set it
+    headers: {}, 
     body: formData
   })
 };
 
-// Order related API calls
 export const orderApi = {
   getUserOrders: () => fetchApi('/orders/my-orders'),
   
@@ -76,7 +70,6 @@ export const orderApi = {
   })
 };
 
-// Export all API services
 export default {
   user: userApi,
   order: orderApi

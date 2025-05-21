@@ -1,20 +1,16 @@
-// frontend/src/pages/CategoryPage.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ProductsGrid } from '../components/Cards';
 import { products } from '../data/products';
 
 const CategoryPage = () => {
-  // Get category from URL parameter
   const { category } = useParams();
   
-  // Format category name for display (capitalize first letter)
   const formatCategoryName = (name) => {
     if (!name) return '';
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
-  // Filter products by the selected category
   const categoryProducts = products.filter(
     product => product.category.toLowerCase() === category.toLowerCase()
   );
@@ -30,7 +26,6 @@ const CategoryPage = () => {
         </p>
       </div>
 
-      {/* Display products grid with filtered products */}
       {categoryProducts.length > 0 ? (
         <ProductsGrid 
           title="" 

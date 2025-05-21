@@ -1,4 +1,3 @@
-// frontend/src/pages/Cart.jsx
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
@@ -11,20 +10,16 @@ export default function Cart() {
     navigate('/checkout');
   };
 
-  // Calculate shipping cost - free for orders over $100
   const shippingCost = subtotal > 100 ? 0 : 5.99;
   
-  // Calculate tax (e.g., 7%)
   const taxRate = 0.07;
   const taxAmount = subtotal * taxRate;
   
-  // Calculate total
   const totalAmount = subtotal + shippingCost + taxAmount;
 
   return (
     <div className="pt-24 min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Page Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Your Shopping Cart</h1>
           <p className="text-base-content/70">
@@ -33,7 +28,6 @@ export default function Cart() {
         </div>
 
         {cartItems.length === 0 ? (
-          /* Empty Cart State */
           <div className="card bg-base-100 shadow-lg">
             <div className="card-body items-center text-center py-16">
               <div className="bg-base-200 w-24 h-24 rounded-full flex items-center justify-center mb-6">

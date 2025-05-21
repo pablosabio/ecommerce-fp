@@ -1,4 +1,3 @@
-// frontend/src/pages/Profile.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -8,10 +7,9 @@ export default function Profile() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   
-  // Fetch user's orders
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!isAuthenticated) return; // Check inside instead
+      if (!isAuthenticated) return; 
       
       setLoading(true);
       try {

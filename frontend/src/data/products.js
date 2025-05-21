@@ -1,14 +1,10 @@
-// frontend/src/data/products.js
 import { getProducts } from '../services/productService';
 
-// Create a loading mechanism
 let productsLoaded = false;
 let loadingPromise = null;
 
-// Export the products array
 export const products = [];
 
-// Function to load products
 export const loadProducts = () => {
   if (productsLoaded) {
     return Promise.resolve(products);
@@ -36,5 +32,4 @@ export const loadProducts = () => {
   return loadingPromise;
 };
 
-// Start loading products immediately
 loadProducts();

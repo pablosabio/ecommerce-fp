@@ -1,9 +1,7 @@
-// frontend/src/components/FeaturedProducts.jsx
 import React, { useState, useEffect } from 'react';
 import { ProductCard } from './Cards';
 import { products, loadProducts } from '../data/products';
 
-// Product skeleton component
 const ProductSkeleton = () => (
   <div className="card w-full bg-base-100 shadow-md">
     {/* Image skeleton */}

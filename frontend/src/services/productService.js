@@ -1,7 +1,5 @@
-// frontend/src/services/productService.js
 const API_URL = 'http://localhost:5000/api';
 
-// Get all products
 export const getProducts = async () => {
   try {
     const response = await fetch(`${API_URL}/products`);
@@ -15,7 +13,6 @@ export const getProducts = async () => {
   }
 };
 
-// Get product by ID
 export const getProductById = async (id) => {
   try {
     const response = await fetch(`${API_URL}/products/${id}`);
@@ -29,7 +26,6 @@ export const getProductById = async (id) => {
   }
 };
 
-// Get products by category
 export const getProductsByCategory = async (category) => {
   try {
     const response = await fetch(`${API_URL}/products/category/${category}`);
@@ -43,7 +39,6 @@ export const getProductsByCategory = async (category) => {
   }
 };
 
-// Get all categories
 export const getCategories = async () => {
   try {
     const response = await fetch(`${API_URL}/products/categories`);
@@ -57,7 +52,6 @@ export const getCategories = async () => {
   }
 };
 
-// Search products
 export const searchProducts = async (query) => {
   try {
     const response = await fetch(`${API_URL}/products/search?query=${encodeURIComponent(query)}`);

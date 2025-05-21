@@ -1,4 +1,3 @@
-// frontend/src/services/orderService.js
 const API_URL = 'http://localhost:5000/api';
 
 export const getOrders = async (token) => {
@@ -37,7 +36,6 @@ export const getMyOrders = async (token) => {
     }
 };
 
-// get order by id
 export const getOrderById = async (orderId, token) => {
     try {
         const response = await fetch(`${API_URL}/orders/${orderId}`, {
@@ -57,7 +55,6 @@ export const getOrderById = async (orderId, token) => {
     }
 };
 
-// create a new order
 export const createOrder = async (orderData, token) => {
     try {
         const response = await fetch(`${API_URL}/orders`, {
