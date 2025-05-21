@@ -1,4 +1,3 @@
-// backend/routes/orderRoutes.js
 import express from 'express';
 import {
   getOrders,
@@ -13,7 +12,6 @@ import { isAdmin } from '../middleware/isAdmin.js';
 
 const router = express.Router();
 
-// Protected routes (require authentication)
 router.use(auth);
 
 // User routes

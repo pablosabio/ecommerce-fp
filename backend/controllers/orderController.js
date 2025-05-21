@@ -1,4 +1,3 @@
-// backend/controllers/orderController.js
 import Order from '../models/Order.js';
 
 // Get all orders (admin only)

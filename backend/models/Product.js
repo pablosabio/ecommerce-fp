@@ -1,4 +1,3 @@
-// backend/models/Product.js
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
@@ -37,12 +36,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // Remove the old single image field
-  // imageSrc: {
-  //   type: String,
-  //   required: true
-  // },
-  // Add the new images array field
   images: {
     type: [String],
     required: true,

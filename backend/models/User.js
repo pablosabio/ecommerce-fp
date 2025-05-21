@@ -1,8 +1,6 @@
-// backend/models/User.js
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 
-// Define address schema
 const addressSchema = new Schema({
   street: String,
   city: String,

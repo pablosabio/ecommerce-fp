@@ -1,4 +1,3 @@
-// backend/controllers/stripeController.js
 import stripe from '../config/stripe.js';
 import Order from '../models/Order.js';
 
@@ -27,7 +26,6 @@ export const createPaymentIntent = async (req, res) => {
   }
 };
 
-// Handle webhook events from Stripe
 // Handle webhook events from Stripe
 export const handleWebhookEvents = async (req, res) => {
   const sig = req.headers['stripe-signature'];
