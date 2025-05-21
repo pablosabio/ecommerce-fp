@@ -33,9 +33,9 @@ export const ProductCard = ({
   return (
     <div className="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200 rounded-lg overflow-hidden">
       {/* Product image area with zoom effect - always white background */}
-      <figure className="bg-white p-4 overflow-hidden">
+      <figure className="bg-white p-8 overflow-hidden">
         <Link to={`/product/${id}`} className="block">
-          <div className="flex justify-center h-40 overflow-hidden">
+          <div className="flex justify-center h-45 overflow-hidden">
             <img
               src={productImage}
               alt={name}
@@ -117,9 +117,11 @@ export const ProductCard = ({
         {/* Category and Add to cart button */}
         <div className="flex justify-between items-center">
           <span className="badge badge-outline badge-sm">{category}</span>
-          <button
+
+      
+<button
   onClick={handleAddToCart}
-  className="group relative rounded-lg px-5 py-1.5 cursor-pointer bg-orange-500 border-2 border-orange-500 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:border-orange-600 overflow-hidden"
+  className="group relative rounded-md px-5 py-1.5 cursor-pointer bg-orange-500 border-b-4 border-orange-700 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:translate-y-[1px] hover:border-b-2 overflow-hidden"
 >
   <span className="transition-transform duration-300 transform group-hover:translate-x-3 inline-block">Add to Cart</span>
   <div className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -128,6 +130,8 @@ export const ProductCard = ({
     </svg>
   </div>
 </button>
+
+
         </div>
       </div>
     </div>

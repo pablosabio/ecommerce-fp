@@ -51,7 +51,7 @@ export default function Cart() {
             <div className="lg:col-span-8">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-bold">Items ({cartItems.reduce((total, item) => total + item.quantity, 0)})</h2>
-                <Link to="/shop" className="btn btn-sm btn-outline btn-primary">
+                <Link to="/shop" className="btn btn-sm btn-outline btn-primary rounded-md">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                   </svg>
@@ -169,7 +169,7 @@ export default function Cart() {
                     
                     <button 
                       onClick={handleCheckout}
-                      className="btn btn-primary btn-block"
+                      className="btn btn-primary btn-block rounded-md inline-flex items-center justify-center px-4 py-2 bg-orange-500 border-b-4 border-orange-700 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:translate-y-[1px] hover:border-b-2"
                     >
                       Proceed to Checkout
                     </button>
