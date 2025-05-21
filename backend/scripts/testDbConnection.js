@@ -10,11 +10,11 @@ const testDbConnection = async () => {
     console.log('Attempting to connect to MongoDB...');
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-    
+
     // Test if models are working
     const orderCount = await Order.countDocuments();
     console.log(`Database has ${orderCount} orders`);
-    
+
     console.log('Connection test successful!');
   } catch (error) {
     console.error(`Error: ${error.message}`);

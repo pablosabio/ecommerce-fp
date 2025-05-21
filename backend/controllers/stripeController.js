@@ -17,8 +17,8 @@ export const createPaymentIntent = async (req, res) => {
     });
 
     // Return the client secret
-    res.json({ 
-      clientSecret: paymentIntent.client_secret 
+    res.json({
+      clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
     console.error('Error creating payment intent:', error);
@@ -30,7 +30,7 @@ export const createPaymentIntent = async (req, res) => {
 export const handleWebhookEvents = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  
+
   let event;
 
   try {
@@ -76,7 +76,7 @@ export const handleWebhookEvents = async (req, res) => {
 // Handle successful payments
 const handlePaymentIntentSucceeded = async (paymentIntent) => {
   console.log('PaymentIntent was successful:', paymentIntent.id);
-  
+
   try {
     // Only proceed if we have a valid payment intent ID
     if (!paymentIntent.id) {
@@ -85,16 +85,13 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     }
 
     // Check if we already have an order for this payment intent
-    let existingOrder = await Order.findOne({ 
-      $or: [
-        { stripePaymentId: paymentIntent.id },
-        { paymentIntentId: paymentIntent.id }
-      ]
+    let existingOrder = await Order.findOne({
+      $or: [{ stripePaymentId: paymentIntent.id }, { paymentIntentId: paymentIntent.id }],
     });
 
     if (existingOrder) {
       console.log(`Order already exists for PaymentIntent: ${paymentIntent.id}`);
-      
+
       // If the order exists but isn't marked as paid, update it
       if (!existingOrder.isPaid) {
         existingOrder.isPaid = true;
@@ -103,12 +100,12 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
           id: paymentIntent.id,
           status: paymentIntent.status,
           update_time: new Date().toISOString(),
-          email_address: paymentIntent.receipt_email || ''
+          email_address: paymentIntent.receipt_email || '',
         };
         await existingOrder.save();
         console.log(`Updated existing order: ${existingOrder._id}`);
       }
-      
+
       return;
     }
 
@@ -116,23 +113,22 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
     let orderItems = [];
     let itemsPrice = 0;
     let userId = null;
-    
+
     if (paymentIntent.metadata && paymentIntent.metadata.products) {
       try {
         const products = JSON.parse(paymentIntent.metadata.products);
-        
+
         // Transform products to orderItems
-        orderItems = products.map(item => ({
+        orderItems = products.map((item) => ({
           name: item.name,
           quantity: item.quantity,
           price: item.price || 0,
-          productId: item.id
+          productId: item.id,
         }));
 
         // Calculate itemsPrice
-        itemsPrice = orderItems.reduce((sum, item) => 
-          sum + (item.price * item.quantity), 0);
-          
+        itemsPrice = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
         // Get the user ID if available in metadata
         if (paymentIntent.metadata.userId) {
           userId = paymentIntent.metadata.userId;
@@ -163,8 +159,8 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
         id: paymentIntent.id,
         status: paymentIntent.status,
         update_time: new Date().toISOString(),
-        email_address: paymentIntent.receipt_email || ''
-      }
+        email_address: paymentIntent.receipt_email || '',
+      },
     });
 
     // Save the billing address if available in metadata
@@ -175,7 +171,7 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
         city: paymentIntent.shipping.address.city,
         state: paymentIntent.shipping.address.state,
         postalCode: paymentIntent.shipping.address.postal_code,
-        country: paymentIntent.shipping.address.country
+        country: paymentIntent.shipping.address.country,
       };
     }
 
@@ -190,16 +186,13 @@ const handlePaymentIntentSucceeded = async (paymentIntent) => {
 // Handle failed payments
 const handlePaymentIntentFailed = async (paymentIntent) => {
   console.log('Payment failed:', paymentIntent.id);
-  
+
   // You could create an order with a failed status or log the failed payment
   // This is optional but helps with tracking failed payments
   try {
     // Check if we already have an order for this payment intent
-    const existingOrder = await Order.findOne({ 
-      $or: [
-        { stripePaymentId: paymentIntent.id },
-        { paymentIntentId: paymentIntent.id }
-      ]
+    const existingOrder = await Order.findOne({
+      $or: [{ stripePaymentId: paymentIntent.id }, { paymentIntentId: paymentIntent.id }],
     });
 
     if (existingOrder) {
@@ -209,12 +202,12 @@ const handlePaymentIntentFailed = async (paymentIntent) => {
         id: paymentIntent.id,
         status: 'failed',
         update_time: new Date().toISOString(),
-        email_address: paymentIntent.receipt_email || ''
+        email_address: paymentIntent.receipt_email || '',
       };
       await existingOrder.save();
       console.log(`Updated existing order as failed: ${existingOrder._id}`);
     }
-    
+
     // You can add additional failure handling logic here if needed
   } catch (error) {
     console.error('Error handling failed payment:', error);

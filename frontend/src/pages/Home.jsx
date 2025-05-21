@@ -1,7 +1,7 @@
-import Carousel from "../components/Carousel";
-import FeatureCards from "../components/FeaturedCards";
-import FeaturedProducts from "../components/FeaturedProducts";
-import NewsletterSubscribe from "../components/NewsletterSuscribe";
+import Carousel from '../components/Carousel';
+import FeatureCards from '../components/FeaturedCards';
+import FeaturedProducts from '../components/FeaturedProducts';
+import NewsletterSubscribe from '../components/NewsletterSuscribe';
 
 export default function Home() {
   return (

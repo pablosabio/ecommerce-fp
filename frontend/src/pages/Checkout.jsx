@@ -8,10 +8,11 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 import { createPaymentIntent } from '../services/stripe';
 
 // Replace with your Stripe publishable key
-const stripePromise = loadStripe('pk_test_51R1Npr03HVAw8BZ90VVjhIR6riUdbntCelVXlsZPXoeS1SdYSCNxgsyi3ZhVK3VMPwfLP74z561GwxX2KDoLRxTW00HFrLhTj9');
+const stripePromise = loadStripe(
+  'pk_test_51R1Npr03HVAw8BZ90VVjhIR6riUdbntCelVXlsZPXoeS1SdYSCNxgsyi3ZhVK3VMPwfLP74z561GwxX2KDoLRxTW00HFrLhTj9'
+);
 
 const CheckoutForm = () => {
-
   const { cartItems, subtotal, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
 
@@ -27,7 +28,7 @@ const CheckoutForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
-  const [paymentStatus, setPaymentStatus] = useState(null); 
+  const [paymentStatus, setPaymentStatus] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
@@ -38,53 +39,56 @@ const CheckoutForm = () => {
     setShippingInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-useEffect(() => {
-  const getPaymentIntent = async () => {
-    try {
-      const metadata = {
-        products: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        // userId: user._id // Add user ID to metadata
-      };
+  useEffect(() => {
+    const getPaymentIntent = async () => {
+      try {
+        const metadata = {
+          products: cartItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          // userId: user._id // Add user ID to metadata
+        };
 
-      if (user && user._id) {
-        metadata.userId = user._id; // Add user ID to metadata
+        if (user && user._id) {
+          metadata.userId = user._id; // Add user ID to metadata
+        }
+
+        const { clientSecret } = await createPaymentIntent(subtotal, metadata);
+        setClientSecret(clientSecret);
+      } catch (err) {
+        console.error('Error getting payment intent:', err);
+        setError('Failed to initialize payment. Please try again.');
       }
-      
-      const { clientSecret } = await createPaymentIntent(subtotal, metadata);
-      setClientSecret(clientSecret);
-    } catch (err) {
-      console.error('Error getting payment intent:', err);
-      setError('Failed to initialize payment. Please try again.');
-    }
-  };
+    };
 
-  if (cartItems.length > 0) { // check this
-    getPaymentIntent();
-  }
-}, [cartItems, subtotal, user]);
+    if (cartItems.length > 0) {
+      // check this
+      getPaymentIntent();
+    }
+  }, [cartItems, subtotal, user]);
 
   // Pre-fill shipping info if user is logged in
-useEffect(() => {
-  if (user) {
-    setShippingInfo(prevState => ({
-      ...prevState,
-      name: user.first_name + ' ' + user.last_name || '',
-      email: user.email || '',
-      // Add address fields if user has address information
-      ...(user.address ? {
-        address: user.address.street || '',
-        city: user.address.city || '',
-        state: user.address.state || '',
-        zipCode: user.address.postalCode || ''
-      } : {})
-    }));
-  }
-}, [user]);
+  useEffect(() => {
+    if (user) {
+      setShippingInfo((prevState) => ({
+        ...prevState,
+        name: user.first_name + ' ' + user.last_name || '',
+        email: user.email || '',
+        // Add address fields if user has address information
+        ...(user.address
+          ? {
+              address: user.address.street || '',
+              city: user.address.city || '',
+              state: user.address.state || '',
+              zipCode: user.address.postalCode || '',
+            }
+          : {}),
+      }));
+    }
+  }, [user]);
 
   // Calculate order summary
   const shipping = 5.99; // Fixed shipping cost
@@ -94,7 +98,7 @@ useEffect(() => {
   // Handle address form submission and move to payment step
   const handleAddressSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate shipping info
     const requiredFields = ['name', 'email', 'address', 'city', 'state', 'zipCode'];
     for (const field of requiredFields) {
@@ -110,7 +114,7 @@ useEffect(() => {
   // Handle payment form submission
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!stripe || !elements) {
       return;
     }
@@ -120,27 +124,14 @@ useEffect(() => {
 
     // Process payment
     const cardElement = elements.getElement(CardElement);
-    
+
     try {
-      const { error: paymentError, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: shippingInfo.name,
-              email: shippingInfo.email,
-              address: {
-                line1: shippingInfo.address,
-                city: shippingInfo.city,
-                state: shippingInfo.state,
-                postal_code: shippingInfo.zipCode,
-                country: 'US', // Default to US or make this selectable
-              },
-            },
-          },
-          shipping: {
+      const { error: paymentError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
             name: shippingInfo.name,
+            email: shippingInfo.email,
             address: {
               line1: shippingInfo.address,
               city: shippingInfo.city,
@@ -149,12 +140,21 @@ useEffect(() => {
               country: 'US', // Default to US or make this selectable
             },
           },
-        }
-      );
-  
-  
+        },
+        shipping: {
+          name: shippingInfo.name,
+          address: {
+            line1: shippingInfo.address,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            postal_code: shippingInfo.zipCode,
+            country: 'US', // Default to US or make this selectable
+          },
+        },
+      });
+
       setIsProcessing(false);
-  
+
       if (paymentError) {
         setError(paymentError.message);
         setPaymentStatus('error');
@@ -164,7 +164,7 @@ useEffect(() => {
         setCurrentStep(3);
       }
     } catch (err) {
-      console.error("Unexpected error during payment:", err);
+      console.error('Unexpected error during payment:', err);
       setIsProcessing(false);
       setError('There was a problem processing your payment. Please try again.');
     }
@@ -272,12 +272,12 @@ useEffect(() => {
           </div>
         </div>
       </div>
-  
+
       {/* Order Summary */}
       <div className="card bg-base-100 shadow-xl border border-base-300">
         <div className="card-body">
           <h2 className="card-title text-xl mb-4">Order Summary</h2>
-          
+
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
               <thead>
@@ -289,16 +289,18 @@ useEffect(() => {
               <tbody>
                 {cartItems.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.name} × {item.quantity}</td>
+                    <td>
+                      {item.name} × {item.quantity}
+                    </td>
                     <td className="text-right">${(item.price * item.quantity).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          
+
           <div className="divider my-2"></div>
-          
+
           <div className="space-y-2">
             <div className="flex justify-between text-base">
               <span>Subtotal</span>
@@ -312,9 +314,9 @@ useEffect(() => {
               <span>Tax (7%)</span>
               <span>${tax.toFixed(2)}</span>
             </div>
-            
+
             <div className="divider my-2"></div>
-            
+
             <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
@@ -322,32 +324,49 @@ useEffect(() => {
           </div>
         </div>
       </div>
-  
+
       {/* Error Message */}
       {error && (
         <div className="alert alert-error shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current flex-shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span>{error}</span>
         </div>
       )}
-  
+
       {/* Continue to Payment Button */}
-      <button
-        type="submit"
-        className="btn btn-primary btn-block btn-lg"
-      >
+      <button type="submit" className="btn btn-primary btn-block btn-lg">
         Continue to Payment
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 ml-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17 8l4 4m0 0l-4 4m4-4H3"
+          />
         </svg>
       </button>
     </form>
   );
   // Step 2: Payment Information
   const renderPaymentStep = () => (
-
     <form onSubmit={handlePaymentSubmit} className="space-y-6">
       <div className="card bg-base-100 shadow-xl border border-base-300">
         <div className="card-body">
@@ -378,13 +397,24 @@ useEffect(() => {
               />
             </div>
             <div className="mt-2 flex items-center text-sm text-base-content/70">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               Secure payment processing by Stripe
             </div>
           </div>
-          
+
           {/* Billing Summary */}
           <div className="mt-6">
             <h3 className="font-medium mb-2">Billing Address</h3>
@@ -392,7 +422,9 @@ useEffect(() => {
               <p>{shippingInfo.name}</p>
               <p>{shippingInfo.email}</p>
               <p>{shippingInfo.address}</p>
-              <p>{shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}</p>
+              <p>
+                {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}
+              </p>
             </div>
           </div>
         </div>
@@ -402,7 +434,7 @@ useEffect(() => {
       <div className="card bg-base-100 shadow-xl border border-base-300">
         <div className="card-body">
           <h2 className="card-title text-xl">Order Summary</h2>
-          
+
           <div className="space-y-1">
             <div className="flex justify-between text-base">
               <span>Subtotal</span>
@@ -416,9 +448,9 @@ useEffect(() => {
               <span>Tax (7%)</span>
               <span>${tax.toFixed(2)}</span>
             </div>
-            
+
             <div className="divider my-2"></div>
-            
+
             <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
@@ -430,8 +462,18 @@ useEffect(() => {
       {/* Error Message */}
       {error && (
         <div className="alert alert-error shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current flex-shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span>{error}</span>
         </div>
@@ -439,13 +481,20 @@ useEffect(() => {
 
       {/* Back and Submit Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          type="button"
-          onClick={goToBillingStep}
-          className="btn btn-outline sm:flex-1"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+        <button type="button" onClick={goToBillingStep} className="btn btn-outline sm:flex-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 mr-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 17l-5-5m0 0l5-5m-5 5h12"
+            />
           </svg>
           Back to Billing
         </button>
@@ -462,8 +511,19 @@ useEffect(() => {
           ) : (
             <>
               Pay ${total.toFixed(2)}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 ml-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </>
           )}
@@ -475,120 +535,148 @@ useEffect(() => {
   // Step 3: Order Confirmation
   const renderConfirmationStep = () => {
     return (
-    <div className="space-y-6">
-      {paymentStatus === 'success' ? (
-        <div className="card bg-base-100 shadow-xl border border-success">
-          <div className="card-body text-center">
-            <div className="flex justify-center mb-4">
-              <div className="rounded-full bg-success/20 p-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+      <div className="space-y-6">
+        {paymentStatus === 'success' ? (
+          <div className="card bg-base-100 shadow-xl border border-success">
+            <div className="card-body text-center">
+              <div className="flex justify-center mb-4">
+                <div className="rounded-full bg-success/20 p-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-16 w-16 text-success"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
               </div>
-            </div>
-            <h2 className="text-2xl font-bold text-success mb-2">Order Successful!</h2>
-            <p className="text-lg mb-3">Your order has been placed and is being processed.</p>
-            <p className="mb-4">Order ID: <span className="font-mono bg-base-200 px-2 py-1 rounded">{orderId}</span></p>
-            <p>An email confirmation has been sent to <strong>{shippingInfo.email}</strong></p>
-            
-            <div className="mt-6">
-              <h3 className="font-bold text-lg mb-2">Shipping to:</h3>
-              <div className="bg-base-200 p-4 rounded-lg inline-block text-left">
-                <p>{shippingInfo.name}</p>
-                <p>{shippingInfo.address}</p>
-                <p>{shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="card bg-base-100 shadow-xl border border-error">
-          <div className="card-body text-center">
-            <div className="flex justify-center mb-4">
-              <div className="rounded-full bg-error/20 p-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-            </div>
-            <h2 className="text-2xl font-bold text-error mb-2">Payment Failed</h2>
-            <p className="text-lg mb-4">{error || "There was a problem processing your payment."}</p>
-            <p>Please try again or use a different payment method.</p>
-          </div>
-        </div>
-      )}
+              <h2 className="text-2xl font-bold text-success mb-2">Order Successful!</h2>
+              <p className="text-lg mb-3">Your order has been placed and is being processed.</p>
+              <p className="mb-4">
+                Order ID: <span className="font-mono bg-base-200 px-2 py-1 rounded">{orderId}</span>
+              </p>
+              <p>
+                An email confirmation has been sent to <strong>{shippingInfo.email}</strong>
+              </p>
 
-      {/* Order Summary */}
-      <div className="card bg-base-100 shadow-xl border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-xl">Order Summary</h2>
-          
-          <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th className="text-right">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.name} × {item.quantity}</td>
-                    <td className="text-right">${(item.price * item.quantity).toFixed(2)}</td>
+              <div className="mt-6">
+                <h3 className="font-bold text-lg mb-2">Shipping to:</h3>
+                <div className="bg-base-200 p-4 rounded-lg inline-block text-left">
+                  <p>{shippingInfo.name}</p>
+                  <p>{shippingInfo.address}</p>
+                  <p>
+                    {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="card bg-base-100 shadow-xl border border-error">
+            <div className="card-body text-center">
+              <div className="flex justify-center mb-4">
+                <div className="rounded-full bg-error/20 p-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-16 w-16 text-error"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-error mb-2">Payment Failed</h2>
+              <p className="text-lg mb-4">
+                {error || 'There was a problem processing your payment.'}
+              </p>
+              <p>Please try again or use a different payment method.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Order Summary */}
+        <div className="card bg-base-100 shadow-xl border border-base-300">
+          <div className="card-body">
+            <h2 className="card-title text-xl">Order Summary</h2>
+
+            <div className="overflow-x-auto">
+              <table className="table table-zebra w-full">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th className="text-right">Price</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-          <div className="divider my-2"></div>
-          
-          <div className="space-y-1">
-            <div className="flex justify-between text-base">
-              <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+                </thead>
+                <tbody>
+                  {cartItems.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        {item.name} × {item.quantity}
+                      </td>
+                      <td className="text-right">${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="flex justify-between text-base">
-              <span>Shipping</span>
-              <span>${shipping.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-base">
-              <span>Tax (7%)</span>
-              <span>${tax.toFixed(2)}</span>
-            </div>
-            
+
             <div className="divider my-2"></div>
-            
-            <div className="flex justify-between text-lg font-bold">
-              <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+
+            <div className="space-y-1">
+              <div className="flex justify-between text-base">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-base">
+                <span>Shipping</span>
+                <span>${shipping.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-base">
+                <span>Tax (7%)</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+
+              <div className="divider my-2"></div>
+
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        {paymentStatus === 'error' ? (
-          <button
-            type="button"
-            onClick={goToBillingStep}
-            className="btn btn-outline btn-error sm:flex-1"
-          >
-            Try Again
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          {paymentStatus === 'error' ? (
+            <button
+              type="button"
+              onClick={goToBillingStep}
+              className="btn btn-outline btn-error sm:flex-1"
+            >
+              Try Again
+            </button>
+          ) : null}
+          <button type="button" onClick={goToHome} className="btn btn-primary sm:flex-1">
+            Continue Shopping
           </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={goToHome}
-          className="btn btn-primary sm:flex-1"
-        >
-          Continue Shopping
-        </button>
+        </div>
       </div>
-    </div>
-  );
+    );
   };
 
   // Render current step
@@ -614,11 +702,13 @@ useEffect(() => {
         <div className={`step ${currentStep >= 2 ? 'step-primary' : ''}`}>Payment</div>
         <div className={`step ${currentStep >= 3 ? 'step-primary' : ''}`}>Confirmation</div>
       </div>
-      
-        {/* Render current step */}
-        {currentStep === 1 ? renderBillingAddressStep() : 
-       currentStep === 2 ? renderPaymentStep() : 
-       renderConfirmationStep()}
+
+      {/* Render current step */}
+      {currentStep === 1
+        ? renderBillingAddressStep()
+        : currentStep === 2
+          ? renderPaymentStep()
+          : renderConfirmationStep()}
     </div>
   );
 };
@@ -637,8 +727,19 @@ const Checkout = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
         </svg>
         Checkout
       </h1>

@@ -14,11 +14,11 @@ export const getProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findOne({ id: req.params.id }).select('-createdAt -__v');
-    
+
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    
+
     res.json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -28,10 +28,10 @@ export const getProductById = async (req, res) => {
 // Get products by category
 export const getProductsByCategory = async (req, res) => {
   try {
-    const products = await Product.find({ 
-      category: req.params.category 
+    const products = await Product.find({
+      category: req.params.category,
     }).select('-createdAt -__v');
-    
+
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -52,19 +52,19 @@ export const getCategories = async (req, res) => {
 export const searchProducts = async (req, res) => {
   try {
     const { query } = req.query;
-    
+
     if (!query) {
       return res.status(400).json({ message: 'Search query is required' });
     }
-    
+
     const products = await Product.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
-        { category: { $regex: query, $options: 'i' } }
-      ]
+        { category: { $regex: query, $options: 'i' } },
+      ],
     }).select('-createdAt -__v');
-    
+
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });

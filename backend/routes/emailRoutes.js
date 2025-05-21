@@ -11,7 +11,9 @@ const router = express.Router();
 router.post('/send', async (req, res) => {
   // Check if transporter was successfully configured on startup
   if (!transporter) {
-    console.error('Attempted to send email, but email service is not configured or failed verification.');
+    console.error(
+      'Attempted to send email, but email service is not configured or failed verification.'
+    );
     // 503 Service Unavailable is appropriate here
     return res.status(503).json({ message: 'Email service is unavailable.' });
   }
@@ -21,16 +23,18 @@ router.post('/send', async (req, res) => {
 
   // Basic input validation
   if (!to || !subject || (!text && !html)) {
-    return res.status(400).json({ message: 'Missing required email fields: to, subject, and text or html body' });
+    return res
+      .status(400)
+      .json({ message: 'Missing required email fields: to, subject, and text or html body' });
   }
 
   // Configure mail options
   const mailOptions = {
     from: `"Your Website Name" <${process.env.MAILJET_SENDER_EMAIL}>`, // Use the verified sender email
-    to: to,                 // Recipient(s)
-    subject: subject,         // Subject
-    text: text,             // Plain text body (optional)
-    html: html,             // HTML body (optional)
+    to: to, // Recipient(s)
+    subject: subject, // Subject
+    text: text, // Plain text body (optional)
+    html: html, // HTML body (optional)
   };
 
   // Attempt to send the email

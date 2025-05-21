@@ -42,22 +42,24 @@ app.use((req, res, next) => {
 });
 
 // Special handling for Stripe webhook route
-app.post('/api/stripe/webhook', bodyParser.raw({type: 'application/json'}), webhookHandler);
-
+app.post('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }), webhookHandler);
 
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/images', imageRoutes);
 // Use stripe routes for all paths except webhook (handled above)
-app.use('/api/stripe', (req, res, next) => {
-  if (req.path !== '/webhook') {
-    next();
-  }
-}, stripeRoutes);
+app.use(
+  '/api/stripe',
+  (req, res, next) => {
+    if (req.path !== '/webhook') {
+      next();
+    }
+  },
+  stripeRoutes
+);
 app.use('/api/orders', orderRoutes);
 app.use('/api/email', emailRouter);
 app.use('/api/products', productRoutes);
-
 
 // Base Route
 app.get('/', (req, res) => {
