@@ -2,15 +2,13 @@ const API_URL = 'http://localhost:5000/api';
 
 export const createPaymentIntent = async (amount, metadata = {}) => {
   try {
-    const formattedAmount = typeof amount === 'string' 
-      ? parseFloat(amount) 
-      : amount;
-    
+    const formattedAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+
     const formattedMetadata = {
       ...metadata,
-      ...(metadata.products && Array.isArray(metadata.products) 
-        ? { products: JSON.stringify(metadata.products) } 
-        : {})
+      ...(metadata.products && Array.isArray(metadata.products)
+        ? { products: JSON.stringify(metadata.products) }
+        : {}),
     };
 
     const response = await fetch(`${API_URL}/stripe/create-payment-intent`, {
@@ -18,9 +16,9 @@ export const createPaymentIntent = async (amount, metadata = {}) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        amount: formattedAmount, 
-        metadata: formattedMetadata
+      body: JSON.stringify({
+        amount: formattedAmount,
+        metadata: formattedMetadata,
       }),
     });
 

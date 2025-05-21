@@ -5,7 +5,7 @@ import {
   createOrder,
   updateOrderToPaid,
   updateOrderToDelivered,
-  getMyOrders
+  getMyOrders,
 } from '../controllers/orderController.js';
 import { auth } from '../middleware/authMiddleware.js';
 import { isAdmin } from '../middleware/isAdmin.js';

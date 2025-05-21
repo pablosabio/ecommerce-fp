@@ -37,11 +37,11 @@ const OrderHistory = () => {
   const filteredOrders = () => {
     switch (activeTab) {
       case 'processing':
-        return orders.filter(order => !order.isPaid);
+        return orders.filter((order) => !order.isPaid);
       case 'completed':
-        return orders.filter(order => order.isPaid);
+        return orders.filter((order) => order.isPaid);
       case 'delivered':
-        return orders.filter(order => order.isDelivered);
+        return orders.filter((order) => order.isDelivered);
       default:
         return orders;
     }
@@ -78,7 +78,7 @@ const OrderHistory = () => {
           <p className="text-lg text-base-content/70 mb-6">
             View and track all your QuickCart purchases in one place.
           </p>
-          
+
           {/* Order Stats Summary */}
           {!loading && !error && orders.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
@@ -89,19 +89,19 @@ const OrderHistory = () => {
               <div className="stat bg-base-100 shadow rounded-lg p-4">
                 <div className="stat-title">Processing</div>
                 <div className="stat-value text-3xl text-warning">
-                  {orders.filter(order => !order.isPaid).length}
+                  {orders.filter((order) => !order.isPaid).length}
                 </div>
               </div>
               <div className="stat bg-base-100 shadow rounded-lg p-4">
                 <div className="stat-title">Completed</div>
                 <div className="stat-value text-3xl text-info">
-                  {orders.filter(order => order.isPaid).length}
+                  {orders.filter((order) => order.isPaid).length}
                 </div>
               </div>
               <div className="stat bg-base-100 shadow rounded-lg p-4">
                 <div className="stat-title">Delivered</div>
                 <div className="stat-value text-3xl text-success">
-                  {orders.filter(order => order.isDelivered).length}
+                  {orders.filter((order) => order.isDelivered).length}
                 </div>
               </div>
             </div>
@@ -121,23 +121,48 @@ const OrderHistory = () => {
             </div>
           ) : error ? (
             <div className="alert alert-error shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current flex-shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <div>
                 <h3 className="font-bold">Error</h3>
                 <div className="text-xs">{error}</div>
               </div>
-              <button onClick={() => window.location.reload()} className="btn btn-sm">Try Again</button>
+              <button onClick={() => window.location.reload()} className="btn btn-sm">
+                Try Again
+              </button>
             </div>
           ) : orders.length === 0 ? (
             <div className="card bg-base-100 shadow-xl text-center py-16">
               <div className="card-body items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-base-content/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 text-base-content/30 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
                 </svg>
                 <h2 className="card-title text-2xl mb-2">No Orders Yet</h2>
-                <p className="mb-6 text-base-content/70">You haven't placed any orders with us yet.</p>
+                <p className="mb-6 text-base-content/70">
+                  You haven't placed any orders with us yet.
+                </p>
                 <Link to="/shop" className="btn btn-primary">
                   Start Shopping
                 </Link>
@@ -147,25 +172,25 @@ const OrderHistory = () => {
             <>
               {/* Filter Tabs */}
               <div className="tabs tabs-boxed bg-base-200 p-1 mb-6 inline-flex">
-                <button 
+                <button
                   className={`tab ${activeTab === 'all' ? 'tab-active' : ''}`}
                   onClick={() => setActiveTab('all')}
                 >
                   All Orders
                 </button>
-                <button 
+                <button
                   className={`tab ${activeTab === 'processing' ? 'tab-active' : ''}`}
                   onClick={() => setActiveTab('processing')}
                 >
                   Processing
                 </button>
-                <button 
+                <button
                   className={`tab ${activeTab === 'completed' ? 'tab-active' : ''}`}
                   onClick={() => setActiveTab('completed')}
                 >
                   Completed
                 </button>
-                <button 
+                <button
                   className={`tab ${activeTab === 'delivered' ? 'tab-active' : ''}`}
                   onClick={() => setActiveTab('delivered')}
                 >
@@ -175,21 +200,25 @@ const OrderHistory = () => {
 
               {/* Order Cards - For Mobile */}
               <div className="grid grid-cols-1 gap-4 mb-8 md:hidden">
-                {filteredOrders().map(order => (
+                {filteredOrders().map((order) => (
                   <div key={order._id} className="card bg-base-100 shadow-xl">
                     <div className="card-body p-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="card-title text-base">Order #{order._id.substring(order._id.length - 8)}</h3>
-                          <p className="text-sm text-base-content/70">{formatDate(order.createdAt)}</p>
+                          <h3 className="card-title text-base">
+                            Order #{order._id.substring(order._id.length - 8)}
+                          </h3>
+                          <p className="text-sm text-base-content/70">
+                            {formatDate(order.createdAt)}
+                          </p>
                         </div>
                         <div className={`badge ${getStatusBadge(order)}`}>
                           {getStatusText(order)}
                         </div>
                       </div>
-                      
+
                       <div className="divider my-2"></div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-sm">Items:</span>
@@ -200,7 +229,7 @@ const OrderHistory = () => {
                           <span className="text-sm font-bold">${order.totalPrice.toFixed(2)}</span>
                         </div>
                       </div>
-                      
+
                       <div className="card-actions justify-end mt-3">
                         <Link to={`/order/${order._id}`} className="btn btn-primary btn-sm">
                           View Details
@@ -225,7 +254,7 @@ const OrderHistory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOrders().map(order => (
+                    {filteredOrders().map((order) => (
                       <tr key={order._id} className="hover">
                         <td className="font-mono text-xs">{order._id}</td>
                         <td>{formatDate(order.createdAt)}</td>
@@ -237,10 +266,7 @@ const OrderHistory = () => {
                           </span>
                         </td>
                         <td>
-                          <Link 
-                            to={`/order/${order._id}`} 
-                            className="btn btn-primary btn-sm"
-                          >
+                          <Link to={`/order/${order._id}`} className="btn btn-primary btn-sm">
                             Details
                           </Link>
                         </td>

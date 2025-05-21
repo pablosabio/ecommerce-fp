@@ -1,215 +1,216 @@
 // frontend/src/contexts/AuthContext.jsx
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    // Initialize user from local storage
-    const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem('user');
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+  // Initialize user from local storage
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-    const [token, setToken] = useState(() => {
-        const savedToken = localStorage.getItem('token');
-        return savedToken || null;
-    });
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    return savedToken || null;
+  });
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    // Save user and token to localStorage whenever they change
-    useEffect(() => {
-        if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
-        } else {
-            localStorage.removeItem('user');
-        }
-        
-        if (token) {
-            localStorage.setItem('token', token);
-        } else {
-            localStorage.removeItem('token');
-        }
-    }, [user, token]);
+  // Save user and token to localStorage whenever they change
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
 
-    const register = async (first_name, last_name, email, password) => {
-        setLoading(true);
-        setError(null);
-        
-        try {
-            const response = await fetch('http://localhost:5000/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include', // This allows cookies to be sent
-                body: JSON.stringify({
-                    first_name,
-                    last_name,
-                    email,
-                    password
-                })
-            });
-             
-            // First check if the response is valid before trying to parse JSON
-             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Registration failed with status: ${response.status}`);
-            }
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [user, token]);
 
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Registration failed');
-            }
-            
-            setUser(data.data.user);
-            setToken(data.data.token);
-            
-            return data.data.user;
-        } catch (err) {
-            setError(err.message || 'Registration failed. Please try again.');
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+  const register = async (first_name, last_name, email, password) => {
+    setLoading(true);
+    setError(null);
 
-    const login = async (email, password) => {
-        setLoading(true);
-        setError(null);
+    try {
+      const response = await fetch('http://localhost:5000/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // This allows cookies to be sent
+        body: JSON.stringify({
+          first_name,
+          last_name,
+          email,
+          password,
+        }),
+      });
 
-        try {
-            const response = await fetch('http://localhost:5000/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include', // This allows cookies to be sent
-                body: JSON.stringify({
-                    email,
-                    password
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed');
-            }
-            
-            setUser(data.data.user);
-            setToken(data.data.token);
-            
-            return data.data.user;
-        } catch (err) {
-            setError(err.message || 'Login failed. Please check your credentials.');
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+      // First check if the response is valid before trying to parse JSON
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Registration failed with status: ${response.status}`);
+      }
 
-    const logout = async () => {
-        try {
-            await fetch('http://localhost:5000/api/users/logout', {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
-        } catch (err) {
-            console.error('Logout error:', err);
-        } finally {
-            setUser(null);
-            setToken(null);
-        }
-    };
+      const data = await response.json();
 
-    // Check if token is still valid (can be used on app load)
-    const checkAuthStatus = useCallback(async () => {
-        if (!token) return false;
-        
-        try {
-            const response = await fetch('http://localhost:5000/api/users/me', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
-            
-            if (!response.ok) {
-                setUser(null);
-                setToken(null);
-                return false;
-            }
-            
-            const data = await response.json();
-            setUser(data.data);
-            return true;
-        } catch (err) { // eslint-disable-line no-unused-vars
-            setUser(null);
-            setToken(null);
-            return false;
-        }
-    } , [token]);
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
 
-    // Check authentication status on mount
-    useEffect(() => {
-        if (token) {
-            checkAuthStatus();
-        }
-    }, [token, checkAuthStatus]);
+      setUser(data.data.user);
+      setToken(data.data.token);
 
-    const updateUserDetails = async (userData) => {
-        // if we received updated user data directly, just update the state
-        if (userData) {
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-            return userData;
-        }
+      return data.data.user;
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // if we didn't receive updated user data, fetch it from the server
-        try {
-            const response = await fetch('http://localhost:5000/api/users/me', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                credentials: 'include'
-            });
+  const login = async (email, password) => {
+    setLoading(true);
+    setError(null);
 
-            if (!response.ok) {
-                throw new Error('Failed to get updated user data');
-            }
+    try {
+      const response = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // This allows cookies to be sent
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-            const data = await response.json();
-            setUser(data.data);
-            localStorage.setItem('user', JSON.stringify(data.data));
-            return data.data;
-        } catch (err) {
-            console.error('Error updating user details:', err);
-            throw err;
-        }
-    };
+      const data = await response.json();
 
-    return (
-        <AuthContext.Provider
-        value={{
-            user,
-            token,
-            loading,
-            error,
-            register,
-            login,
-            logout,
-            checkAuthStatus,
-            updateUserDetails,
-            isAuthenticated: !!user
-        }}
-        >
-            {children}
-        </AuthContext.Provider>
-    );
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      setUser(data.data.user);
+      setToken(data.data.token);
+
+      return data.data.user;
+    } catch (err) {
+      setError(err.message || 'Login failed. Please check your credentials.');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('http://localhost:5000/api/users/logout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setUser(null);
+      setToken(null);
+    }
+  };
+
+  // Check if token is still valid (can be used on app load)
+  const checkAuthStatus = useCallback(async () => {
+    if (!token) return false;
+
+    try {
+      const response = await fetch('http://localhost:5000/api/users/me', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        setUser(null);
+        setToken(null);
+        return false;
+      }
+
+      const data = await response.json();
+      setUser(data.data);
+      return true;
+    } catch (err) {
+      // eslint-disable-line no-unused-vars
+      setUser(null);
+      setToken(null);
+      return false;
+    }
+  }, [token]);
+
+  // Check authentication status on mount
+  useEffect(() => {
+    if (token) {
+      checkAuthStatus();
+    }
+  }, [token, checkAuthStatus]);
+
+  const updateUserDetails = async (userData) => {
+    // if we received updated user data directly, just update the state
+    if (userData) {
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return userData;
+    }
+
+    // if we didn't receive updated user data, fetch it from the server
+    try {
+      const response = await fetch('http://localhost:5000/api/users/me', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get updated user data');
+      }
+
+      const data = await response.json();
+      setUser(data.data);
+      localStorage.setItem('user', JSON.stringify(data.data));
+      return data.data;
+    } catch (err) {
+      console.error('Error updating user details:', err);
+      throw err;
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        error,
+        register,
+        login,
+        logout,
+        checkAuthStatus,
+        updateUserDetails,
+        isAuthenticated: !!user,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
