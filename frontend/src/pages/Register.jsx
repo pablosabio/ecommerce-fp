@@ -238,7 +238,7 @@ const Register = () => {
               
               <button 
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="btn btn-primary btn-block rounded-md"
                 disabled={loading}
               >
                 {loading ? (
@@ -255,7 +255,7 @@ const Register = () => {
               <div className="grid grid-cols-1 gap-3">
                 <button 
                   type="button"
-                  className="btn btn-outline btn-block"
+                  className="btn btn-outline btn-block rounded-md"
                   onClick={() => alert('Google registration is not implemented yet')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="h-5 w-5 mr-2">

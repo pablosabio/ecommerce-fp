@@ -79,9 +79,10 @@ export default function Carousel() {
 
 <div className="flex justify-center md:justify-start gap-4 flex-wrap">
 
+
 <Link
   to={`/product/${item.targetProductId}`}
-  className="group relative rounded-lg px-8 py-3 bg-orange-500 border-2 border-orange-500 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:border-orange-600 overflow-hidden"
+  className="group relative rounded-md px-8 py-3 bg-orange-500 border-b-4 border-orange-700 text-white font-medium transition-all duration-300 hover:bg-orange-600 hover:translate-y-[1px] hover:border-b-2 overflow-hidden"
 >
   <span className="transition-transform duration-300 transform group-hover:translate-x-3 inline-block">Buy now</span>
   <div className="absolute left-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -90,10 +91,10 @@ export default function Carousel() {
     </svg>
   </div>
 </Link>
-  
+
 <Link
   to="/shop"
-  className="group relative rounded-lg px-8 py-3 bg-transparent border-2 border-black text-black font-medium transition-all duration-300 hover:bg-gray-50 overflow-hidden"
+  className="group relative rounded-md px-8 py-3 bg-transparent border-2 border-t-2 border-l-2 border-r-2 border-b-4 border-gray-700 text-black font-medium transition-all duration-300 hover:bg-gray-50 hover:translate-y-[1px] hover:border-b-2 overflow-hidden"
 >
   <span className="transition-transform duration-300 transform group-hover:-translate-x-2 inline-block">Find more</span>
   <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -104,17 +105,6 @@ export default function Carousel() {
 </Link>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
 
               </div>
 
