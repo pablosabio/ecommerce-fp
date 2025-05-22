@@ -3,9 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import compression from 'compression';
 import connectDB from './config/db.js';
 import corsOptions from './config/cors.js';
-// Add this import for body-parser
 import bodyParser from 'body-parser';
 
 // Import Routes
