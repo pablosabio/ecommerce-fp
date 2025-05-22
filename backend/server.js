@@ -26,6 +26,11 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+  app.use(compression());
+}
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(cookieParser());
