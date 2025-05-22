@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 export default function Profile() {
   const { user, token, isAuthenticated, logout } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
@@ -13,7 +15,7 @@ export default function Profile() {
 
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+        const response = await fetch(`${API_BASE_URL}/orders/my-orders`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

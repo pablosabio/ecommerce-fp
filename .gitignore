@@ -61,3 +61,8 @@ Thumbs.db
 
 # misc
 *.pem
+# Environment variables
+.env*
+backend/.env*
+frontend/.env*
+*.env*
