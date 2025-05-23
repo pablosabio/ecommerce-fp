@@ -36,6 +36,13 @@ if (process.env.NODE_ENV === 'production') {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+app.use('/api/images', cors({
+  origin: '*', // Allow all origins for images
+  methods: ['GET'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false // Important: set to false for images
+}));
+
 // Use express.json() for all routes except the Stripe webhook
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/stripe/webhook') {

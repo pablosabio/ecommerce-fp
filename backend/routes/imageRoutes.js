@@ -6,11 +6,6 @@ const router = express.Router();
 // Get image by filename
 router.get('/:filename', async (req, res, next) => {
   try {
-    // Add CORS headers for images
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
     const image = await Image.findOne({ filename: req.params.filename });
 
     if (!image) {
