@@ -72,6 +72,32 @@ app.get('/', (req, res) => {
   res.send('E-commerce API is running...');
 });
 
+// Temporary route to fix existing profile URLs
+app.get('/api/fix-profiles', async (req, res) => {
+  try {
+    const User = (await import('./models/User.js')).default;
+    const users = await User.find({
+      profile_avatar: { $regex: 'localhost:5000' }
+    });
+    
+    for (const user of users) {
+      user.profile_avatar = user.profile_avatar.replace(
+        'http://localhost:5000', 
+        'https://quickcart-api.onrender.com'
+      );
+      await user.save();
+    }
+    
+    res.json({ 
+      message: `Fixed ${users.length} user profiles`,
+      fixedUsers: users.length,
+      updatedUsers: users.map(u => ({ id: u._id, newUrl: u.profile_avatar }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
