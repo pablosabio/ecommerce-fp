@@ -1,8 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const getOrders = async (token) => {
   try {
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(`${API_BASE_URL}/orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -20,7 +20,7 @@ export const getOrders = async (token) => {
 
 export const getMyOrders = async (token) => {
   try {
-    const response = await fetch(`${API_URL}/orders/my-orders`, {
+    const response = await fetch(`${API_BASE_URL}/orders/my-orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +38,7 @@ export const getMyOrders = async (token) => {
 
 export const getOrderById = async (orderId, token) => {
   try {
-    const response = await fetch(`${API_URL}/orders/${orderId}`, {
+    const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -57,7 +57,7 @@ export const getOrderById = async (orderId, token) => {
 
 export const createOrder = async (orderData, token) => {
   try {
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(`${API_BASE_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
