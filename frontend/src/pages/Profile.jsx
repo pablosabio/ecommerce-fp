@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
 
 export default function Profile() {
   const { user, token, isAuthenticated, logout } = useContext(AuthContext);

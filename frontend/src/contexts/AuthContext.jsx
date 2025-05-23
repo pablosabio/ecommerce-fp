@@ -1,7 +1,7 @@
 // frontend/src/contexts/AuthContext.jsx
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
 
 export const AuthContext = createContext();
 
