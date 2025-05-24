@@ -105,6 +105,28 @@ app.get('/api/fix-profiles', async (req, res) => {
   }
 });
 
+// ADD these new debug routes
+app.get('/api/debug', (req, res) => {
+  res.json({
+    environment: process.env.NODE_ENV,
+    hasJwtSecret: !!process.env.JWT_SECRET,
+    hasMongoUri: !!process.env.MONGODB_URI,
+    baseUrl: process.env.BASE_URL,
+    port: process.env.PORT,
+    corsOrigin: process.env.CORS_ORIGIN,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api/test-cors', (req, res) => {
+  res.json({
+    message: 'CORS test successful',
+    origin: req.headers.origin,
+    userAgent: req.headers['user-agent'],
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
