@@ -28,7 +28,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: {
+      policy: "cross-origin" // Allow cross-origin resource loading
+    },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "*", "data:", "blob:"], // Allow images from any origin
+        connectSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  }));
   app.use(compression());
 }
 
