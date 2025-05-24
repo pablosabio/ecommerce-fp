@@ -32,16 +32,22 @@ if (process.env.NODE_ENV === 'production') {
   app.use(compression());
 }
 
+app.use('/api/images', (req, res, next) => {
+  // Set CORS headers for all image requests
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(cookieParser());
-
-app.use('/api/images', cors({
-  origin: '*', // Allow all origins for images
-  methods: ['GET'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false // Important: set to false for images
-}));
 
 // Use express.json() for all routes except the Stripe webhook
 app.use((req, res, next) => {
