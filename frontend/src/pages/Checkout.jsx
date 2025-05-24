@@ -8,9 +8,8 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 import { createPaymentIntent } from '../services/stripe';
 
 // Replace with your Stripe publishable key
-const stripePromise = loadStripe(
-  'pk_test_51R1Npr03HVAw8BZ90VVjhIR6riUdbntCelVXlsZPXoeS1SdYSCNxgsyi3ZhVK3VMPwfLP74z561GwxX2KDoLRxTW00HFrLhTj9'
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51R1Npr03HVAw8BZ90VVjhIR6riUdbntCelVXlsZPXoeS1SdYSCNxgsyi3ZhVK3VMPwfLP74z561GwxX2KDoLRxTW00HFrLhTj9');
+
 
 const CheckoutForm = () => {
   const { cartItems, subtotal, clearCart } = useContext(CartContext);

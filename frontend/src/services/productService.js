@@ -1,8 +1,8 @@
-const API_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
 
 export const getProducts = async () => {
   try {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_BASE_URL}/products`);
     if (!response.ok) {
       throw new Error('Failed to fetch products');
     }
@@ -15,7 +15,7 @@ export const getProducts = async () => {
 
 export const getProductById = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`);
+    const response = await fetch(`${API_BASE_URL}/products/${id}`);
     if (!response.ok) {
       throw new Error('Failed to fetch product');
     }
@@ -28,7 +28,7 @@ export const getProductById = async (id) => {
 
 export const getProductsByCategory = async (category) => {
   try {
-    const response = await fetch(`${API_URL}/products/category/${category}`);
+    const response = await fetch(`${API_BASE_URL}/products/category/${category}`);
     if (!response.ok) {
       throw new Error('Failed to fetch products in category');
     }
@@ -41,7 +41,7 @@ export const getProductsByCategory = async (category) => {
 
 export const getCategories = async () => {
   try {
-    const response = await fetch(`${API_URL}/products/categories`);
+    const response = await fetch(`${API_BASE_URL}/products/categories`);
     if (!response.ok) {
       throw new Error('Failed to fetch categories');
     }
@@ -54,7 +54,7 @@ export const getCategories = async () => {
 
 export const searchProducts = async (query) => {
   try {
-    const response = await fetch(`${API_URL}/products/search?query=${encodeURIComponent(query)}`);
+    const response = await fetch(`${API_BASE_URL}/products/search?query=${encodeURIComponent(query)}`);
     if (!response.ok) {
       throw new Error('Failed to search products');
     }

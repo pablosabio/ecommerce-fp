@@ -1,6 +1,8 @@
 import React, { useState, useContext, useRef } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
+
 const SettingsPage = () => {
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -37,7 +39,7 @@ const SettingsPage = () => {
     try {
       setPasswordStatus('Processing...');
 
-      const response = await fetch('http://localhost:5000/api/users/change-password', {
+      const response = await fetch(`${API_BASE_URL}/users/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +109,7 @@ const SettingsPage = () => {
       const formData = new FormData();
       formData.append('profile_image', fileInputRef.current.files[0]);
 
-      const response = await fetch('http://localhost:5000/api/users/me', {
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

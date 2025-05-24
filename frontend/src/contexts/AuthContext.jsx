@@ -1,6 +1,8 @@
 // frontend/src/contexts/AuthContext.jsx
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -38,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/register', {
+      const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +115,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('http://localhost:5000/api/users/logout', {
+      await fetch(`${API_BASE_URL}/users/logout`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -133,7 +135,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return false;
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/me', {
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -149,8 +151,8 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       setUser(data.data);
       return true;
-    } catch (err) {
-      // eslint-disable-line no-unused-vars
+    } catch (err) {      // eslint-disable-line no-unused-vars
+
       setUser(null);
       setToken(null);
       return false;
@@ -174,7 +176,7 @@ export const AuthProvider = ({ children }) => {
 
     // if we didn't receive updated user data, fetch it from the server
     try {
-      const response = await fetch('http://localhost:5000/api/users/me', {
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

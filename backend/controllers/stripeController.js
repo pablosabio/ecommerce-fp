@@ -26,53 +26,70 @@ export const createPaymentIntent = async (req, res) => {
   }
 };
 
-// Handle webhook events from Stripe
+// Update your handleWebhookEvents function
 export const handleWebhookEvents = async (req, res) => {
+  console.log('🎯 WEBHOOK RECEIVED!');
+  console.log('Request method:', req.method);
+  console.log('Content-Type:', req.headers['content-type']);
+  console.log('Body type:', typeof req.body);
+  console.log('Body is Buffer:', Buffer.isBuffer(req.body));
+  
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  console.log('Stripe signature present:', !!sig);
+  console.log('Webhook secret present:', !!endpointSecret);
+  console.log('Webhook secret starts with whsec_:', endpointSecret?.startsWith('whsec_'));
 
   let event;
 
   try {
     // Verify the event came from Stripe
     if (endpointSecret) {
+      console.log('Attempting to verify webhook signature...');
       // The raw body is available in req.body as a Buffer
       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      console.log('✅ Webhook signature verified successfully');
     } else {
+      console.log('⚠️ No webhook secret - processing without verification');
       // If no webhook secret is set, just parse the body as JSON
-      // Note: The body is already a Buffer, so we need to convert it to a string
       const payload = req.body.toString();
       event = JSON.parse(payload);
       console.log('WARNING: Processing webhook without signature verification');
     }
   } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
+    console.error(`❌ Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
+
+  console.log('Event type:', event.type);
+  console.log('Event ID:', event.id);
 
   // Handle specific event types
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
+        console.log('Processing payment_intent.succeeded...');
         await handlePaymentIntentSucceeded(event.data.object);
         break;
       case 'payment_intent.payment_failed':
+        console.log('Processing payment_intent.payment_failed...');
         await handlePaymentIntentFailed(event.data.object);
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
 
+    console.log('✅ Webhook processed successfully');
     // Return a 200 response to acknowledge receipt of the event
     res.json({ received: true });
   } catch (error) {
-    console.error(`Error processing webhook: ${error.message}`);
+    console.error(`❌ Error processing webhook: ${error.message}`);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({ error: error.message });
   }
 };
 
-// Handle successful payments
-// Handle successful payments
 // Handle successful payments
 const handlePaymentIntentSucceeded = async (paymentIntent) => {
   console.log('PaymentIntent was successful:', paymentIntent.id);

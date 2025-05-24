@@ -185,9 +185,11 @@ export const updateUser = async (req, res, next) => {
           data: req.file.buffer,
           contentType: req.file.mimetype,
         });
-
-        // Set the profile_avatar URL in update data
-        updateData.profile_avatar = `http://localhost:5000/api/images/${img.filename}`;
+      // Set the profile_avatar URL in update data
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://quickcart-api.onrender.com' 
+        : 'http://localhost:5000';
+        updateData.profile_avatar = `${baseUrl}/api/images/${img.filename}`;
       } catch (err) {
         console.error('Error handling profile image:', err);
         // Continue with update even if image fails

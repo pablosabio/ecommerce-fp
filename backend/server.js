@@ -1,11 +1,11 @@
-// backend/server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import compression from 'compression';
 import connectDB from './config/db.js';
 import corsOptions from './config/cors.js';
-// Add this import for body-parser
 import bodyParser from 'body-parser';
 
 // Import Routes
@@ -16,27 +16,39 @@ import imageRoutes from './routes/imageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 
-// Load env variables
 dotenv.config();
 
-// Connect to database
 connectDB();
 
-// Initialize app
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet({
+    crossOriginResourcePolicy: {
+      policy: "cross-origin" //
+    },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "*", "data:", "blob:"],
+        connectSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  }));
+  app.use(compression());
+}
 
 // Middleware
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-// Use express.json() for all routes except the Stripe webhook
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/stripe/webhook') {
-    // For Stripe webhook, use raw body
     next();
   } else {
-    // For everything else, parse JSON
     express.json()(req, res, next);
   }
 });
@@ -47,7 +59,6 @@ app.post('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }), we
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/images', imageRoutes);
-// Use stripe routes for all paths except webhook (handled above)
 app.use(
   '/api/stripe',
   (req, res, next) => {

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const createPaymentIntent = async (amount, metadata = {}) => {
   try {
@@ -11,7 +11,7 @@ export const createPaymentIntent = async (amount, metadata = {}) => {
         : {}),
     };
 
-    const response = await fetch(`${API_URL}/stripe/create-payment-intent`, {
+    const response = await fetch(`${API_BASE_URL}/stripe/create-payment-intent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

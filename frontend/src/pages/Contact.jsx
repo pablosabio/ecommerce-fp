@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_BASE_URL = 'https://quickcart-api.onrender.com/api';
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -24,7 +26,7 @@ export default function Contact() {
     setStatus('');
 
     // Backend API endpoint URL
-    const backendUrl = 'http://localhost:5000/api/email/send';
+    const backendUrl = `${API_BASE_URL}/email/send`;
 
     // Email details
     const recipientEmail = 'supportquickcard@proton.me';

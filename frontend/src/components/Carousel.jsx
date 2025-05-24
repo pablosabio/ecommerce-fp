@@ -10,7 +10,7 @@ export default function Carousel() {
       name: 'Intelligent Speaker',
       image:
         'https://res.cloudinary.com/dnhduqv8j/image/upload/v1747315581/audio.2.3-removebg-preview_zpibas.png',
-      targetProductId: 'audio-002', // The product ID to redirect to
+      targetProductId: 'audio-002',
       offerText: 'Limited Time Offer 30% Off',
     },
     {
@@ -18,7 +18,7 @@ export default function Carousel() {
       name: 'Ultimate Smartphone',
       image:
         'https://res.cloudinary.com/dnhduqv8j/image/upload/v1747315585/smart2.1-removebg-preview_rk71ul.png',
-      targetProductId: 'smartphones-002', // The product ID to redirect to
+      targetProductId: 'smartphones-002',
       offerText: 'Flash Sale – Only Today!',
     },
     {
@@ -26,7 +26,7 @@ export default function Carousel() {
       name: 'Premium Ultrabook',
       image:
         'https://res.cloudinary.com/dnhduqv8j/image/upload/v1747317422/comp1.1-removebg-preview_mspqt9.png',
-      targetProductId: 'computers-001', // The product ID to redirect to
+      targetProductId: 'computers-001',
       offerText: 'Exclusive Deal – 20% Off',
     },
   ];
@@ -70,7 +70,7 @@ export default function Carousel() {
             {/* Slide Content - Adjusted padding and gap */}
             <div className="flex flex-col md:flex-row items-center justify-center w-full px-2 md:px-8 gap-0">
               {/* Text - Added padding to move away from edge */}
-              <div className="text-center md:text-left flex-1 mb-3 md:mb-0 md:pl-16 lg:pl-20">
+              <div className="text-center md:text-left flex-1 mb-6 md:mb-0 md:pl-16 lg:pl-20">
                 <p className="text-orange-500 text-sm mb-2">{item.offerText}</p>
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-black leading-snug mb-4">
                   {item.name} - Experience Excellence!
@@ -141,8 +141,8 @@ export default function Carousel() {
           </div>
         ))}
 
-        {/* Navigation buttons */}
-        <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between z-20">
+        {/* Navigation buttons - FIXED for mobile */}
+        <div className="absolute left-5 right-5 flex justify-between z-20 top-2/3 md:top-1/2 transform -translate-y-1/2">
           <button onClick={goToPrev} className="btn btn-circle opacity-50 hover:opacity-100">
             ❮
           </button>
