@@ -1,10 +1,8 @@
-// backend/routes/imageRoutes.js - FIXED VERSION
 import express from 'express';
 import Image from '../models/Image.js';
 
 const router = express.Router();
 
-// Get image by filename - simplified CORS approach
 router.get('/:filename', async (req, res, next) => {
   try {
     console.log(`Image request for: ${req.params.filename}`);
@@ -22,7 +20,6 @@ router.get('/:filename', async (req, res, next) => {
 
     console.log(`Serving image: ${req.params.filename}, type: ${image.contentType}, size: ${image.data.length} bytes`);
 
-    // Set content headers - let main CORS handle CORS headers
     res.set({
       'Content-Type': image.contentType,
       'Content-Length': image.data.length,
