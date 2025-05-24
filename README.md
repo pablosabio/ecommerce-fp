@@ -1,108 +1,102 @@
-# QuickCart E-commerce Project
+# QuickCart - Premium Tech E-commerce Store
 
-This repository contains the QuickCart e-commerce application, which is currently under active development.
+**⚠️ EDUCATIONAL PROJECT DISCLAIMER**
 
-## Project Structure
+This is a **student educational project** created for academic purposes only. This website is **NOT a real store** and does **NOT sell actual products**. All product images are used under fair use for educational purposes and are sourced from [BackMarket](https://www.backmarket.es/es-es). No commercial activity, sales, or monetary transactions occur through this platform - it serves solely as a portfolio demonstration and educational exercise.
 
-- `/frontend` - React frontend application with Vite
-- `/backend` - Express.js API server
+---
 
-## Getting Started
+A modern, full-stack e-commerce application built with React, Node.js, and MongoDB. This project demonstrates a complete e-commerce workflow including user authentication, shopping cart functionality, and payment integration for educational and portfolio purposes.
 
-### Prerequisites
+## 🌐 Live Demo
 
-- Node.js (v16+)
-- npm (v8+)
-- MongoDB
+**🚀 [Visit QuickCart Store](https://quickcart-fp.netlify.app/)** *(Educational Demo Only)*
 
-### Installation
+> **Note:** This is a portfolio demonstration. No real purchases can be made. Use Stripe test cards for payment testing.
 
-1. Clone this repository:
-git clone https://github.com/pablosabio/ecommerce-fp.git
-cd ecommerce-fp
+## ✨ Features
 
-2. Set up the backend:
-cd backend
-npm install
+### 🛒 **Shopping Experience**
+- Browse premium tech products across multiple categories
+- Advanced search and filtering capabilities
+- Interactive product details with image galleries
+- Smart shopping cart with persistent storage
+- Secure checkout process with Stripe integration
 
-3. Create a `.env` file in the backend directory with these values:
+### 👤 **User Management**
+- User registration and authentication
+- Profile management with custom avatar uploads
+- Order history and tracking
+- Secure password management
 
-PORT=5000
+### 📱 **Modern Design**
+- Fully responsive design for all devices
+- Clean, intuitive user interface
+- Dark/light theme support
+- Smooth animations and transitions
+- Professional branding and favicon
 
-MONGODB_URI=your_mongodb_connection_string
+### 🔒 **Security & Performance**
+- JWT-based authentication
+- Secure payment processing via Stripe
+- CORS protection and security headers
+- Image optimization and caching
+- Production-ready deployment
 
-STRIPE_SECRET_KEY=your_stripe_secret_key
+## 🛠️ Tech Stack
 
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret // Just for Pablo
+### **Frontend**
+- **React 19** - Modern UI library
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first styling
+- **DaisyUI** - Component library
+- **Vite** - Fast build tool
 
-MAILJET_API_KEY=your_mailjet_api_key
+### **Backend**
+- **Node.js** - Runtime environment
+- **Express.js** - Web application framework
+- **MongoDB Atlas** - Cloud database
+- **Mongoose** - MongoDB object modeling
+- **JWT** - Authentication tokens
+- **Stripe** - Payment processing
+- **Multer** - File upload handling
 
-MAILJET_SECRET_KEY=your_mailjet_secret_key
+### **Deployment & Services**
+- **Frontend:** Netlify
+- **Backend:** Render
+- **Database:** MongoDB Atlas
+- **Payment Processing:** Stripe (Test Mode)
+- **Email Services:** Mailjet
 
-MAILJET_SENDER_EMAIL=supportquickcard@proton.me
+## 📸 Image Attribution
 
-5. Set up the frontend:
-cd ../frontend
-npm install
+All product images used in this educational project are sourced from [BackMarket España](https://www.backmarket.es/es-es) and are used under fair use principles for educational purposes only. This project does not claim ownership of these images and they are used solely for demonstration and learning purposes.
 
-### Running the Application
+## 🎓 Educational Purpose
 
-1. Start the backend:
-cd backend
-node server.js
+This project was developed as part of a web development course final project. It serves to demonstrate:
 
-2. In a new terminal, start the frontend:
-cd frontend
-npm run dev
+- Full-stack web development skills
+- Modern React development patterns
+- Backend API design and implementation
+- Database design and integration
+- Payment system integration (test mode only)
+- Deployment and DevOps practices
+- User authentication and security
 
-3. Open the application at [http://localhost:5173](http://localhost:5173)
+## 📝 License & Legal
 
-4. You will need to run both frontend and backend for some features to work.
+This project is for **educational purposes only**. 
 
-## Development Workflow
+- **Code:** Available under MIT License for educational use
+- **Product Images:** Sourced from BackMarket España for educational fair use only
+- **Branding:** QuickCart is a fictional brand created for this educational project
+- **Disclaimer:** This is not a real e-commerce store and no actual transactions occur
 
-1. **Always pull the latest changes before starting work:**
-git checkout main
-git pull origin main
+## 👨‍💻 Author
 
-2. **Create a feature branch for your work:**
-git checkout -b feature-name
+Created as a web development course final project to demonstrate full-stack development capabilities.
 
-3. **Install dependencies in the correct folders:**
-- For backend dependencies: `cd backend && npm install package-name`
-- For frontend dependencies: `cd frontend && npm install package-name`
-- Never run npm install in the root directory
+---
 
-4. **Commit your changes frequently:**
-git add .
-git commit -m "Descriptive message about changes"
-
-5. **Push your branch and create a pull request:**
-git push origin feature-name
-
-## Current Features
-
-- Product browsing and searching
-- Shopping cart functionality
-- Checkout process with Stripe integration
-- Order history
-
-## Work in Progress
-
-- User authentication
-- Scraping web to add more products
-- Product reviews and ratings backend
-- Admin dashboard
-- Advanced filtering and sorting
-
-## Team Guidelines
-
-- Keep commits small and focused on specific changes
-- Write descriptive commit messages
-- Test your code before pushing
-- Communicate about major structural changes
-- Always pull before starting new work
-
-## Contact
-
-For any questions, reach out to Pablo :)
+*This project showcases modern web development practices and serves as a portfolio piece. All content is used for educational purposes under fair use guidelines.*
