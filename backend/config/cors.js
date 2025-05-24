@@ -1,39 +1,44 @@
-// backend/config/cors.js
+// backend/config/cors.js - More flexible CORS config
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
     
-    const allowedOrigins = process.env.NODE_ENV === 'production' 
-      ? [
-          process.env.CORS_ORIGIN, // Your main Netlify domain
-          'https://6830363b1c5feb979e33ec48--quickcart-fp.netlify.app', // Your current deploy
-          'https://main--quickcart-fp.netlify.app', // Main branch
-          'https://deploy-preview-*--quickcart-fp.netlify.app', // Deploy previews pattern
-          'http://localhost:5173' // Keep for local testing
-        ].filter(Boolean) // Remove any undefined values
-      : [
-          'http://localhost:5173',
-          'http://localhost:3000',
-          'http://127.0.0.1:5173'
-        ];
+    if (process.env.NODE_ENV === 'production') {
+      // More flexible patterns for Netlify domains
+      const allowedPatterns = [
+        /^https:\/\/.*--quickcart-fp\.netlify\.app$/, // Any deploy of your app
+        /^https:\/\/quickcart-fp\.netlify\.app$/, // Production domain (if you set custom domain)
+        /^https:\/\/main--quickcart-fp\.netlify\.app$/, // Main branch
+        /^http:\/\/localhost:5173$/, // Local development
+        /^http:\/\/localhost:3000$/, // Alternative local port
+        /^http:\/\/127\.0\.0\.1:5173$/, // Alternative localhost
+      ];
 
-    // Check if origin matches any allowed origins (including wildcard for deploy previews)
-    const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (allowedOrigin.includes('*')) {
-        // Handle wildcard patterns for deploy previews
-        const pattern = allowedOrigin.replace('*', '.*');
-        return new RegExp(pattern).test(origin);
+      // Check if origin matches any allowed pattern
+      const isAllowed = allowedPatterns.some(pattern => pattern.test(origin));
+
+      if (isAllowed) {
+        console.log(`CORS allowed origin: ${origin}`);
+        callback(null, true);
+      } else {
+        console.log(`CORS blocked origin: ${origin}`);
+        console.log('Allowed patterns:', allowedPatterns.map(p => p.toString()));
+        callback(new Error('Not allowed by CORS'));
       }
-      return allowedOrigin === origin;
-    });
-
-    if (isAllowed) {
-      callback(null, true);
     } else {
-      console.log(`CORS blocked origin: ${origin}`);
-      console.log(`Allowed origins: ${allowedOrigins.join(', ')}`);
-      callback(new Error('Not allowed by CORS'));
+      // Development - allow common local origins
+      const allowedOrigins = [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'http://127.0.0.1:5173'
+      ];
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,
